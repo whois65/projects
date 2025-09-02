@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">  
+  <title>Simple Calculator</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      user-select: none;
+      font-family: Arial, sans-serif;
+    }
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #121212;
+      height: 100vh;
+    }
+    main {
+      width: 95%;
+      margin: 5%;
+      max-width: 420px;
+      background: #000;
+      padding: 2vh;
+      border-radius: 20px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+    #inputBar {
+      width: 100%;
+      height: 70px;
+      padding: 10px;
+      font-size: 2rem;
+      outline: none;
+      background: #222;
+      color: #fff;
+      border: none;
+      border-radius: 15px;
+      text-align: right;
+      box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.4);
+    }
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+    .buttons button {
+      padding: 18px 0;
+      font-size: 1.4rem;
+      font-weight: bold;
+      background: linear-gradient(145deg, #222, #333);
+      color: #fff;
+      border: none;
+      border-radius: 15px;
+      box-shadow: 0 5px 12px rgba(0, 0, 0, 0.4);
+      transition: transform 0.15s ease, background 0.2s ease;
+    }
+    .buttons button:active {
+      transform: scale(0.92);
+      background: linear-gradient(145deg, #2f2f2f, #444);
+    }
+    .buttons .sym {
+      color: #da0;
+    }
+    .buttons .eq {
+      background: #da0;
+      
+      grid-column: span 1;
+    }
+    .buttons .eq:active {
+      background: #eb1;
+    }
+    @media screen and (max-width: 600px) {
+      main {
+        padding: 20px;
+      }
+      #inputBar {
+        height: 60px;
+        font-size: 1.8rem;
+      }
+      .buttons button {
+        padding: 15px 0;
+        font-size: 1.2rem;
+      }
+    }
+    @media screen and (max-width: 400px) {
+      main {
+        padding: 20px;
+      }
+      #inputBar {
+        height: 55px;
+        font-size: 1.5rem;
+      }
+      .buttons button {
+        padding: 12px 0;
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <input type="text" id="inputBar" readonly>
+    <div class="buttons">
+      <button onclick="c()" class="sym">C</button>
+      <button onclick="backspace()" class="sym">⌫</button>
+      <button onclick="print('**')" class="sym">^</button>
+      <button onclick="print('+')" class="sym">+</button>
+      <button onclick="print(7)">7</button>
+      <button onclick="print(8)">8</button>
+      <button onclick="print(9)">9</button>
+      <button onclick="print('-')" class="sym">-</button>
+      <button onclick="print(4)">4</button>
+      <button onclick="print(5)">5</button>
+      <button onclick="print(6)">6</button>
+      <button onclick="print('*')" class="sym">×</button>
+      <button onclick="print(1)">1</button>
+      <button onclick="print(2)">2</button>
+      <button onclick="print(3)">3</button>
+      <button onclick="print('/')" class="sym">÷</button>
+      <button onclick="print('.')">.</button>
+      <button onclick="print(0)">0</button>
+      <button onclick="percent()" class="sym">%</button>
+      <button class="eq" onclick="equal()">=</button>
+    </div>
+  </main>
+
+  <script>
+    const inputBar = document.querySelector('#inputBar');
+    let temp = "";
+
+    function print(x) {
+      if (x === '*') {
+        inputBar.value += '×';
+      } else if (x === '/') {
+        inputBar.value += '÷';
+      } else if (x === '**') {
+        inputBar.value += '^';
+      } else {
+        inputBar.value += x;
+      }
+      temp += x;
+    }
+
+    function percent() {
+      let match = temp.match(/(\d+(\.\d+)?)$/);
+      if (match) {
+        let num = parseFloat(match[0]) / 100;
+        temp = temp.slice(0, -match[0].length) + num;
+        inputBar.value = inputBar.value.slice(0, -match[0].length) + num;
+      }
+    }
+
+    function equal() {
+      if (temp === "") return;
+      try {
+        inputBar.value = eval(temp);
+        temp = inputBar.value;
+      } catch {
+        inputBar.value = "Error";
+        temp = "";
+      }
+    }
+
+    function backspace() {
+      inputBar.value = inputBar.value.slice(0, -1);
+      temp = temp.slice(0, -1);
+    }
+
+    function c() {
+      inputBar.value = "";
+      temp = "";
+    }
+  </script>
+</body>
+</html>
