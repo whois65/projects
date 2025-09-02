@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Video</title>
+  <link rel="stylesheet" href="https://whois65.github.io/Style/saku.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { width: 90%; margin: 5%; 
+      font-family: sans-serif;
+      color: #0b2470;
+      background-color: #e3f2fd;
+    }
+    section {
+      padding: 0.5rem;
+      text-align: center;
+      background-color: lightblue;
+      border-radius: 10px;
+    }
+    button {
+      padding: 5px 2rem;
+      background-color: #2196f3;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+    button:hover { 
+      background-color: #1976d2; }
+    ul { list-style: none; padding: 0; }
+    li {
+      background: lightblue;
+      padding: 10px;
+      margin: 5px 0;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    li:hover { background: deepskyblue; color: white; }
+    video, iframe {
+      width: 100%;
+      margin-top: 20px;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body>
+  <section>
+    <h2>Watch online videos</h2><br />
+    <label>Username:</label>
+    <input id="username" type="text" name="username" required><br><br>
+    <label>Video URL:</label>
+    <input type="url" id="url" placeholder="https://examples.com/example.mp4" required><br><br>
+    <button onclick="up()">Simpan</button>
+  </section>
+
+  <h3 id="btn" style="cursor:pointer;">Example videos</h3>
+  <ul id="list"></ul>
+  
+  <div id="container"></div>
+
+<script>
+let vid = document.getElementById("container");
+
+function convertYouTube(url) {
+  // Ambil ID dari link YouTube (support youtu.be & youtube.com/watch?v=)
+  let videoId = "";
+  let ytMatch = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([^?&]+)/);
+  if (ytMatch && ytMatch[1]) {
+    videoId = ytMatch[1];
+    return `https://www.youtube.com/embed/${videoId}`;
+  }
+  return url; // Kalau bukan YouTube, balikin URL asli
+}
+
+function up() {
+  let username = document.getElementById("username").value;
+  let userInput = document.getElementById("url").value;
+
+  if (!userInput) {
+    alert("Type video URL");
+  } else if (!username) {
+    alert("Type the username");
+  } else {
+    let finalUrl = convertYouTube(userInput);
+    if (finalUrl.includes("youtube.com/embed/")) {
+      vid.innerHTML = `<iframe src="${finalUrl}" frameborder="0" allowfullscreen></iframe>`;
+    } else {
+      vid.innerHTML = `<video src="${finalUrl}" controls allowfullscreen></video>`;
+    }
+  }
+}
+
+let videos = [
+  {title:"Big Buck Bunny",url:"http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"},
+  {title:"Elephants Dream",url:"http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"},
+  {title:"For Bigger Blazes",url:"http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"},
+  {title:"For Bigger Escapes",url:"http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4"},
+  {title:"For Bigger Fun",url:"http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4"},
+  {title:"For Bigger Joyrides",url:"http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4"},
+  {title:"For Bigger Meltdowns",url:"http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4"},
+  {title:"Sintel",url:"http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4"},
+  {title:"Subaru Outback On Street and Dirt",url:"http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4"},
+  {title:"Tears of Steel",url:"http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4"},
+  {title:"Volkswagen GTI Review",url:"http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/VolkswagenGTIReview.mp4"},
+  {title:"We Are Going On Bullrun",url:"http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4"},
+  {title:"What Car Can You Get For A Grand",url:"http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WhatCarCanYouGetForAGrand.mp4"}
+];
+
+let btn = document.getElementById("btn");
+let ul = document.getElementById("list");
+
+btn.addEventListener('click', () => {
+  if (ul.innerHTML === "") {
+    videos.forEach(v => {
+      ul.innerHTML += `<li data-url="${v.url}">${v.title}</li>`;
+    });
+  } else {
+    ul.innerHTML = "";
+  }
+});
+
+ul.addEventListener('click', (e) => {
+  if (e.target.tagName === 'LI') {
+    let link = e.target.getAttribute('data-url');
+    navigator.clipboard.writeText(link)
+      .then(() => alert(`Link berhasil disalin: ${link}`))
+      .catch(err => console.error(err));
+
+    // Tampilkan video di player
+    vid.innerHTML = `<video src="${link}" controls autoplay allowfullscreen></video>`;
+  }
+});
+</script>
+</body>
+</html>
