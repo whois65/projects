@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Video</title>
+  <title>video</title>
   <link rel="stylesheet" href="https://whois65.github.io/Style/saku.css">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -61,15 +61,14 @@
 <script>
 let vid = document.getElementById("container");
 
-function convertYouTube(url) {
-  // Ambil ID dari link YouTube (support youtu.be & youtube.com/watch?v=)
+function convertYouTube(url){
   let videoId = "";
   let ytMatch = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([^?&]+)/);
   if (ytMatch && ytMatch[1]) {
     videoId = ytMatch[1];
     return `https://www.youtube.com/embed/${videoId}`;
   }
-  return url; // Kalau bukan YouTube, balikin URL asli
+  return url;
 }
 
 function up() {
@@ -125,8 +124,6 @@ ul.addEventListener('click', (e) => {
     navigator.clipboard.writeText(link)
       .then(() => alert(`Link berhasil disalin: ${link}`))
       .catch(err => console.error(err));
-
-    // Tampilkan video di player
     vid.innerHTML = `<video src="${link}" controls autoplay allowfullscreen></video>`;
   }
 });
