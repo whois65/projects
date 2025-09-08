@@ -42,7 +42,6 @@
       min-height: 50px;
       box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
     }
-    /* Loading Spinner */
     #loading {
       display: none;
       margin: 15px;
@@ -76,22 +75,19 @@
   <script>
     const output = document.querySelector('#output');
     const loading = document.querySelector('#loading');
-
-    // Print paragraf biasa
+    
     const printp = (x) => {
       const p = document.createElement("p");
       p.innerHTML = x;
       output.appendChild(p);
     };
 
-    // Bikin <ul> kosong dengan ID
     const createUl = (id) => {
       const ul = document.createElement("ul");
       ul.id = id;
       output.appendChild(ul);
     };
 
-    // Print <li> ke dalam <ul> sesuai ID
     const printlist = (x, id) => {
       const list = document.createElement("li");
       list.innerHTML = x;
@@ -99,7 +95,6 @@
       ul.appendChild(list);
     };
 
-    // Print tombol audio + tag audio
     const printaudio = (src) => {
       if (!src) return;
       const audio = document.createElement("audio");
@@ -113,41 +108,28 @@
       output.appendChild(btn);
     };
 
-    // Fungsi ambil data dari API
     async function getData(x) {
       try {
         output.innerHTML = "";
         loading.style.display = "block";
-
         const url = `https://api.dictionaryapi.dev/api/v2/entries/en/${x}`;
         const response = await fetch(url);
         const data = await response.json();
         console.log(data);
         const data1 = data[0];
-
         loading.style.display = "none";
-
-        // Word
         printp(`Word: ${data1.word}`);
         printp(`Phonetic: ${data1.phonetic || "/" + data1.word + "/"}`);
         printp(`Part of Speech: ${data1.meanings[0].partOfSpeech}`);
-
-        // Audio pronunciation
         const audioSrc = data1.phonetics.find(p => p.audio)?.audio || "";
         printaudio(audioSrc);
-
-        // Meanings list
         printp("Meanings:");
         createUl("definitions");
         data1.meanings.forEach((m) => {
           printlist(`${m.definitions[0].definition}`, "definitions");
         });
-
-        // Example sentence
         const example = data1.meanings[0].definitions[0]?.example || "No example available.";
         printp(`Example: ${example}`);
-
-        // Source link
         printp(`Source: <a href="${data1.sourceUrls[0]}" target="_blank">${data1.sourceUrls[0]}</a>`);
 
       } catch {
