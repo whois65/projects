@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+    *{
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Times New Roman', Times, serif;
+    }
+
+    html, body {
+        height: 100%;
+        background: #9300ce;
+    }
+    
+    header h1 {
+        background: rgb(255, 79, 108);
+        color: rgb(0, 5, 70);
+        position: sticky;
+        text-align: center;
+    }
+
+    .tabhead {
+        padding: 15px;
+        color: aliceblue;
+        text-align: center;
+    }
+
+    table {
+        width: 95%;
+        border-collapse: collapse;
+        padding: 5px;
+        margin: 2.5%;
+        border-radius: 20px;
+        overflow: hidden;
+    }
+
+    table th {
+        padding: 2px 5px;
+        background: #d874ff;
+    }
+
+    table td {
+        padding: 2px 8px;
+        background: #eee;
+    }
+
+    .note {
+        color: #eee;
+    }
+    </style>
+</head>
+<body>
+    <header><h1>Jadwal Sehari - hari</h1></header>
+    <h1 class="tabhead">Senin - Kamis</h1>
+    <table border="1"><thead><tr><th>Time</th><th>Activity</th></tr></thead><tbody class="tbody"></tbody></table>
+    <h1 class="tabhead">Jumat dan Sabtu</h1>
+    <table border="1"><thead><tr><th>Time</th><th>Activity</th></tr></thead><tbody class="tabody"></tbody></table>
+    <h1 class="tabhead">Minggu</h1>
+    <table border="1"><thead><tr><th>Time</th><th>Activity</th></tr></thead><tbody class="tabbody"></tbody></table>
+    <p class="note">Catatan: Jadwal bisa berubah jika sesuai fleksibilitas, sakit atau urusan penting (bukan malas)</p>
+    <script>
+    const tbody = document.querySelector(".tbody");
+    const tabody = document.querySelector(".tabody");
+    const tabbody = document.querySelector(".tabbody");
+    let times = [4.3, 6, 7.15, 15.15, 15.2, 15.4, 16.15, 16.35, 16.4, 17.05, 18, 18.15, 19, 19.15, 20, 20.15, 21, 4.3];
+    let activities = ["Bangun tidur, sholat subuh, mandi", "Sarapan, siap-siap, dan pergi sekolah", "Sekolah", "Pulang sekolah", "Mandi dan ganti baju", "Sholat Ashar", "Review pelajaran", "Istirahat", "Mengerjakan PR atau Belajar", "Istirahat", "Sholat Maghrib", "English", "Makan", "Membaca", "Sholat Isya", "Menghafal", "Tidur"];
+
+    async function addTo(element, start, end, act) {
+        let row = document.createElement("tr");element.appendChild(row);
+        let time = document.createElement("td");row.appendChild(time);
+        let activity = document.createElement("td");row.appendChild(activity);
+        time.textContent = `${start.toFixed(2)} - ${end.toFixed(2)}`;
+        activity.textContent = act;
+    }
+
+    for (let i = 0;i <= activities.length - 1;i++) { addTo(tbody, times[i], times[i+1], activities[i]); }
+    for (let i = 0;i <= activities.length - 1;i++) { addTo(tabody, times[i], times[i+1], activities[i]); }
+    for (let i = 0;i <= activities.length - 1;i++) { addTo(tabbody, times[i], times[i+1], activities[i]); }
+
+    </script>
+</body>
+</html>
