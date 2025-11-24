@@ -10,154 +10,132 @@
         font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     }
 
-    html, body {
-        height: 100%;
-        background: #90c;
-    }
+    html, body { height: 100%; background: #f7d4e8; }
 
     header {
-        background: rgb(59, 0, 107);
+        background: #c94b8a;
         position: sticky;
         top: 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 20px;
     }
 
-    header h1 {
-        padding: 5px;
-        color: #cfe;
-    }
+    header h1 { color: #fff; }
 
     .menu {
         opacity: 0;
         position: fixed;
         top: 50%; left: 50%;
-        transform: translate(-50%, -50%);
-        background: #000;
+        transform: translate(-50%, -50%) scale(1.2);
+        background: #fff;
         padding: 20px;
         border-radius: 20px;
         transition: all 0.3s ease-out;
-    }
-
-    @media (max-width: 500px) {
-        .menu {
-            padding: 10px;
-            font-size: 13px;
-        }
-
-        table tr {
-            font-size: 15px;
-        }
-
-        .note, .ls {
-            font-size: 15px;
-        }
+        box-shadow: 0 0 20px rgba(0,0,0,0.2);
     }
 
     .active { opacity: 1; }
 
     .menuicon {
-        position: absolute;
-        top: 8px; right: 5px;
+        cursor: pointer;
     }
 
     .menuicon div {
         background: #fff;
-        padding: 2px 13px;
-        margin: 5px;
+        padding: 2px 16px;
+        margin: 4px;
         border-radius: 100px;
     }
 
     .tabhead {
         padding: 15px;
         font-size: 27px;
-        color: aliceblue;
+        color: #c94b8a;
         text-align: center;
-        transition: all 0.3s ease-in-out;
-    }
-
-    .tabhead:hover {
-        transform: scale(1.2);
+        font-weight: bold;
     }
 
     table {
         width: 95%;
         border-collapse: collapse;
-        padding: 5px;
         margin: 2.5%;
-        border-radius: 20px;
+        border-radius: 15px;
         overflow: hidden;
-    }
-    
-    table tr {
-        background: #eee;
-    }
-
-    table tr:hover {
-        background: #111;
-        color: #eee;
-    }
-
-    table tr:active {
-        background: #000;
-        color: #eee;
     }
 
     table th {
-        padding: 2px 5px;
-        background: #d874ff;
+        background: #ff9ac4;
+        padding: 8px;
+        color: #fff;
     }
 
-    table td {
-        padding: 2px 8px;
-    }
+    table tr { background: #ffe9f3; transition: .2s; }
+    table tr:hover { background: #fcb3d1; color: #fff; }
 
-    .note {
-        color: #eee;
-    }
-    
-    .ls {
-        color: #eee;
-        margin-left: 25px;
+    table td { padding: 6px 10px; }
+
+    .note, .ls { color: #c94b8a; margin-left: 25px; font-size: 17px; }
+
+    @media (max-width: 500px) {
+        .menu { padding: 10px; font-size: 13px; }
+        table tr { font-size: 15px; }
+        .note, .ls { font-size: 15px; }
     }
     </style>
 </head>
 <body>
-    <header><h1>Jadwal Sehari - hari</h1><div class="menuicon" onclick="showM()"><div></div><div></div><div></div></div></header>
+    <header>
+        <h1>Jadwal Sehari - hari</h1>
+        <div class="menuicon" onclick="showM()">
+            <div></div><div></div><div></div>
+        </div>
+    </header>
+
     <nav class="menu">
-        <h1 style="color: maroon;">Syarat - syarat</h1>
+        <h1 style="color:#c94b8a; text-align:center;">Syarat - syarat</h1>
         <ul class="ls">
-            <li>Waktu maksimal bermain dalam sehari adalah 5 jam</li>
-            <li>Kurangi scrolling diwaktu istirahat, banyak hal yang bisa jadi hiburan</li>
-            <li>Selalu tingkatkan ilmu pengetahuan dengan literasi</li>
-            <li>Senang belajar hal baru setiap hari</li>
-            <li>Selalu berpikiran positif, apa yang kamu pikirkan akan terjadi</li>
-            <li>Fokus pada solusi pada permasalahan</li>
-            <li>Kegagalan adalah guru terbaik</li>
-            <li>Berani mengambil resiko yang terukur</li>
-            <li>Berpikir jangka panjang, masa depan adalah kamu</li>
-            <li>Selalu bersyukur atas nikmat-Nya</li>
+            <li>Waktu maksimal main hp dalam sehari 5 jam</li>
+            <li>Kurangi scrolling diwaktu istirahat</li>
+            <li>Perbanyak literasi</li>
+            <li>Suka belajar hal baru</li>
+            <li>Pikiran positif</li>
+            <li>Fokus pada solusi</li>
+            <li>Kegagalan itu guru</li>
+            <li>Ambil resiko yang terukur</li>
+            <li>Berpikir jangka panjang</li>
+            <li>Bersyukur setiap hari</li>
         </ul>
     </nav>
+
     <h1 class="tabhead">Senin - Kamis</h1>
     <table border="1"><thead><tr><th>Time</th><th>Activity</th></tr></thead><tbody class="tbody"></tbody></table>
+
     <h1 class="tabhead">Jumat dan Sabtu</h1>
     <table border="1"><thead><tr><th>Time</th><th>Activity</th></tr></thead><tbody class="tabody"></tbody></table>
+
     <h1 class="tabhead">Minggu dan Hari Libur</h1>
     <table border="1"><thead><tr><th>Time</th><th>Activity</th></tr></thead><tbody class="tabbody"></tbody></table>
-    <p class="note">Catatan: </p>
+
+    <p class="note">Catatan:</p>
     <ul class="ls">
-        <li>Jadwal bisa berubah jika sesuai fleksibilitas, sakit atau urusan penting (bukan malas)</li>
-        <li>Waktu belajar hp silent mode</li>
-        <li>Tingkatkan rasa keingintahuan saat belajar</li>
+        <li>Jadwal bisa berubah sesuai keadaan penting</li>
+        <li>Belajar wajib silent mode</li>
+        <li>Tingkatkan rasa ingin tahu</li>
         <li>Lakukan yang terbaik</li>
-        <li>Tetap semangat, Always study hard!</li>
+        <li>Tetap semangat!</li>
     </ul>
+
     <script>
     const tbody = document.querySelector(".tbody");
     const tabody = document.querySelector(".tabody");
     const tabbody = document.querySelector(".tabbody");
-    let times = [4.3, 6, 7.15, 15.15, 15.2, 15.4, 16.15, 16.35, 16.4, 17.05, 18, 18.15, 19, 19.15, 20, 20.15, 21, 4.3];
-    let activities = ["Bangun tidur, sholat subuh, mandi", "Sarapan, siap-siap, dan pergi sekolah", "Sekolah", "Pulang sekolah", "Mandi dan ganti baju", "Sholat Ashar", "Review pelajaran", "Istirahat", "Mengerjakan PR atau Belajar", "Istirahat", "Sholat Maghrib", "English", "Makan", "Membaca", "Sholat Isya", "Menghafal vocabulary", "Tidur"];
-    function showM() { document.querySelector("nav").classList.toggle("active"); }
+
+    function showM() {
+        document.querySelector("nav").classList.toggle("active");
+    }
+
     function addTo(element, start, end, act) {
         let row = document.createElement("tr");element.appendChild(row);
         let time = document.createElement("td");row.appendChild(time);
@@ -166,13 +144,17 @@
         activity.textContent = act;
     }
 
-    for (let i=0;i <= activities.length-1;i++) { addTo(tbody, times[i], times[i+1], activities[i]); }
-    times = [4.3, 6, 7.15, 12, 1, 15.4, 16.15, 16.35, 16.4, 17.05, 18, 18.15, 19, 19.15, 20, 20.15, 21, 4.3];
-    activities = ["Bangun tidur, sholat subuh, mandi", "Sarapan, siap-siap, dan pergi sekolah", "Sekolah", "Pulang sekolah", "Mandi dan ganti baju", "Sholat Ashar", "Review pelajaran", "Istirahat", "Mengerjakan PR atau Belajar", "Istirahat", "Sholat Maghrib", "English", "Makan", "Membaca", "Sholat Isya", "Menghafal vocabulary", "Tidur"];
-    for (let i=0;i <= activities.length-1;i++) { addTo(tabody, times[i], times[i+1], activities[i]); }
-    times = [6, 7, 9, 10, 10.3, 13, 13.15, 14, 16, 18, 19, 19.15, 20, 20.15, 21, 4.3];
-    activities = ["Bangun tidur, sholat subuh", "Nonton TV", "Bantu mama, sarapan", "Mandi", "Beresin rumah", "Lunch", "Istirahat", "Tidur siang", "Review pelajaran", "Sholat Maghrib", "Makan", "Membaca", "Sholat Isya", "Menghafal vocabulary", "Tidur"];
-    for (let i=0;i <= activities.length-1;i++) { addTo(tabbody, times[i], times[i+1], activities[i]); }
+    let times1 = [4.3, 6, 7.15, 15.15, 15.2, 15.4, 16.15, 16.35, 16.4, 17.05, 18, 18.15, 19, 19.15, 20, 20.15, 21, 4.3];
+    let acts1 = ["Bangun, sholat, mandi", "Sarapan & siap sekolah", "Sekolah", "Pulang", "Mandi", "Sholat Ashar", "Review pelajaran", "Istirahat", "PR / Belajar", "Istirahat", "Sholat Maghrib", "English", "Makan", "Membaca", "Sholat Isya", "Vocabulary", "Tidur"];
+    for (let i=0;i < acts1.length;i++) addTo(tbody, times1[i], times1[i+1], acts1[i]);
+
+    let times2 = [4.3, 6, 7.15, 12, 13, 15.4, 16.15, 16.35, 16.4, 17.05, 18, 18.15, 19, 19.15, 20, 20.15, 21, 4.3];
+    let acts2 = acts1;
+    for (let i=0;i < acts2.length;i++) addTo(tabody, times2[i], times2[i+1], acts2[i]);
+
+    let times3 = [6, 7, 9, 10, 10.3, 13, 13.15, 14, 16, 18, 19, 19.15, 20, 20.15, 21, 4.3];
+    let acts3 = ["Bangun & sholat", "Nonton TV", "Bantu mama", "Mandi", "Beresin rumah", "Lunch", "Istirahat", "Tidur siang", "Review pelajaran", "Sholat Maghrib", "Makan", "Membaca", "Sholat Isya", "Vocabulary", "Tidur"];
+    for (let i=0;i < acts3.length;i++) addTo(tabbody, times3[i], times3[i+1], acts3[i]);
     </script>
 </body>
 </html>
