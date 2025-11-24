@@ -4,92 +4,113 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-    *{
-        margin: 0; padding: 0;
-        user-select: none; box-sizing: border-box;
-        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-    }
+        * {
+            margin: 0; padding: 0;
+            user-select: none;
+            box-sizing: border-box;
+        }
 
-    html, body { height: 100%; background: #f7d4e8; }
+        html, body {
+            height: 100%;
+            background: #f7d4e8;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
 
-    header {
-        background: #c94b8a;
-        position: sticky;
-        top: 0;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 10px 20px;
-    }
+        header {
+            background: #c94b8a;
+            position: sticky;
+            top: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+        }
 
-    header h1 { color: #fff; }
+        header h1 { color: #fff; }
 
-    .menu {
-        opacity: 0;
-        position: fixed;
-        top: 50%; left: 50%;
-        transform: translate(-50%, -50%) scale(1.2);
-        background: #fff;
-        padding: 20px;
-        border-radius: 20px;
-        transition: all 0.3s ease-out;
-        box-shadow: 0 0 20px rgba(0,0,0,0.2);
-    }
+        .menu {
+            opacity: 0;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(1.2);
+            background: #fff;
+            padding: 20px;
+            border-radius: 20px;
+            transition: all 0.3s ease-out;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+        }
 
-    .active { opacity: 1; }
+        .active { opacity: 1; }
 
-    .menuicon {
-        cursor: pointer;
-    }
+        .menuicon { cursor: pointer; }
 
-    .menuicon div {
-        background: #fff;
-        padding: 2px 16px;
-        margin: 4px;
-        border-radius: 100px;
-    }
+        .menuicon div {
+            background: #fff;
+            padding: 2px 16px;
+            margin: 4px;
+            border-radius: 100px;
+        }
 
-    .tabhead {
-        padding: 15px;
-        font-size: 27px;
-        color: #c94b8a;
-        text-align: center;
-        font-weight: bold;
-    }
+        .tabhead {
+            padding: 15px;
+            font-size: 27px;
+            color: #c94b8a;
+            text-align: center;
+            font-weight: bold;
+        }
 
-    table {
-        width: 95%;
-        border-collapse: collapse;
-        margin: 2.5%;
-        border-radius: 15px;
-        overflow: hidden;
-    }
+        table {
+            width: 95%;
+            border-collapse: collapse;
+            margin: 2.5%;
+            border-radius: 15px;
+            overflow: hidden;
+        }
 
-    table th {
-        background: #ff9ac4;
-        padding: 8px;
-        color: #fff;
-    }
+        table th {
+            background: #ff9ac4;
+            padding: 8px;
+            color: #fff;
+        }
 
-    table tr { background: #ffe9f3; transition: .2s; }
-    table tr:hover { background: #fcb3d1; color: #fff; }
+        table tr {
+            background: #ffe9f3;
+            transition: .2s;
+        }
 
-    table td { padding: 6px 10px; }
+        table tr:hover {
+            background: #fcb3d1;
+            color: #fff;
+        }
 
-    .note, .ls { color: #c94b8a; margin-left: 25px; font-size: 17px; }
+        table td { padding: 6px 10px; }
 
-    @media (max-width: 500px) {
-        .menu { padding: 10px; font-size: 13px; }
-        table tr { font-size: 15px; }
-        .note, .ls { font-size: 15px; }
-    }
+        .note, .ls {
+            color: #c94b8a;
+            margin-left: 25px;
+            font-size: 17px;
+        }
+
+        footer { text-align: center; padding: 20px; font-weight: 600; font-family: 'Times New Roman', Times, serif; }
+
+        @media (max-width: 500px) {
+            header h1 { font-size: 30px; }
+            .tabhead { font-size: 25px; }
+            .menu { padding: 10px; font-size: 13px; }
+            table tr { font-size: 15px; }
+            .note, .ls { font-size: 15px; }
+        }
     </style>
 </head>
+
 <body>
     <header>
         <h1>Jadwal Sehari - hari</h1>
-        <div class="menuicon" onclick="showM()">
-            <div></div><div></div><div></div>
+        <div class="menuicon" onclick="document.querySelector('nav').classList.toggle('active');">
+            <div></div>
+            <div></div>
+            <div></div>
         </div>
     </header>
 
@@ -111,10 +132,8 @@
 
     <h1 class="tabhead">Senin - Kamis</h1>
     <table border="1"><thead><tr><th>Time</th><th>Activity</th></tr></thead><tbody class="tbody"></tbody></table>
-
     <h1 class="tabhead">Jumat dan Sabtu</h1>
     <table border="1"><thead><tr><th>Time</th><th>Activity</th></tr></thead><tbody class="tabody"></tbody></table>
-
     <h1 class="tabhead">Minggu dan Hari Libur</h1>
     <table border="1"><thead><tr><th>Time</th><th>Activity</th></tr></thead><tbody class="tabbody"></tbody></table>
 
@@ -122,39 +141,60 @@
     <ul class="ls">
         <li>Jadwal bisa berubah sesuai keadaan penting</li>
         <li>Belajar wajib silent mode</li>
-        <li>Tingkatkan rasa ingin tahu</li>
-        <li>Lakukan yang terbaik</li>
-        <li>Tetap semangat!</li>
+        <li>Lakukan yang terbaik dan tetap semangat!</li>
     </ul>
 
+    <footer><q id="quotes"></q></footer>
+
     <script>
-    const tbody = document.querySelector(".tbody");
-    const tabody = document.querySelector(".tabody");
-    const tabbody = document.querySelector(".tabbody");
+        const tbody = document.querySelector(".tbody");
+        const tabody = document.querySelector(".tabody");
+        const tabbody = document.querySelector(".tabbody");
+        let q = document.getElementById("quotes");
 
-    function showM() {
-        document.querySelector("nav").classList.toggle("active");
-    }
+        function addTo(element, start, end, act) {
+            let row = document.createElement("tr"); element.appendChild(row);
+            let time = document.createElement("td"); row.appendChild(time);
+            let activity = document.createElement("td"); row.appendChild(activity);
+            time.textContent = `${start.toFixed(2)} - ${end.toFixed(2)}`;
+            activity.textContent = act;
+        }
 
-    function addTo(element, start, end, act) {
-        let row = document.createElement("tr");element.appendChild(row);
-        let time = document.createElement("td");row.appendChild(time);
-        let activity = document.createElement("td");row.appendChild(activity);
-        time.textContent = `${start.toFixed(2)} - ${end.toFixed(2)}`;
-        activity.textContent = act;
-    }
+        let times = [4.3, 6, 7.15, 15.15, 15.2, 15.4, 16.15, 16.35, 16.4, 17.05, 18, 18.15, 19, 19.15, 20, 20.15, 21, 4.3];
+        let acts = ["Bangun, sholat, mandi", "Sarapan & siap sekolah", "Sekolah", "Pulang", "Mandi", "Sholat Ashar", "Review pelajaran", "Istirahat", "PR / Belajar", "Istirahat", "Sholat Maghrib", "English", "Makan", "Membaca", "Sholat Isya", "Vocabulary", "Tidur"];
+        for (let i = 0; i < acts.length; i++) addTo(tbody, times[i], times[i + 1], acts[i]);
 
-    let times1 = [4.3, 6, 7.15, 15.15, 15.2, 15.4, 16.15, 16.35, 16.4, 17.05, 18, 18.15, 19, 19.15, 20, 20.15, 21, 4.3];
-    let acts1 = ["Bangun, sholat, mandi", "Sarapan & siap sekolah", "Sekolah", "Pulang", "Mandi", "Sholat Ashar", "Review pelajaran", "Istirahat", "PR / Belajar", "Istirahat", "Sholat Maghrib", "English", "Makan", "Membaca", "Sholat Isya", "Vocabulary", "Tidur"];
-    for (let i=0;i < acts1.length;i++) addTo(tbody, times1[i], times1[i+1], acts1[i]);
+        times = [4.3, 6, 7.15, 12, 12.15, 15, 15.4, 16.15, 16.35, 16.4, 17.05, 18, 18.15, 19, 19.15, 20, 20.15, 21, 4.3];
+        acts = ["Bangun, sholat, mandi", "Sarapan & siap sekolah", "Sekolah", "Lunch", "Tidur siang", "Mandi", "Sholat Ashar", "Review pelajaran", "Istirahat", "PR / Belajar", "Istirahat", "Sholat Maghrib", "English", "Makan", "Membaca", "Sholat Isya", "Vocabulary", "Tidur"];
+        for (let i = 0; i < acts.length; i++) addTo(tabody, times[i], times[i + 1], acts[i]);
 
-    let times2 = [4.3, 6, 7.15, 12, 13, 15.4, 16.15, 16.35, 16.4, 17.05, 18, 18.15, 19, 19.15, 20, 20.15, 21, 4.3];
-    let acts2 = acts1;
-    for (let i=0;i < acts2.length;i++) addTo(tabody, times2[i], times2[i+1], acts2[i]);
+        times = [6, 7, 9, 10, 10.3, 13, 13.15, 14, 16, 16.15, 18, 19, 19.15, 20, 20.15, 21, 4.3];
+        acts = ["Bangun & sholat", "Nonton TV", "Bantu mama", "Mandi", "Beresin rumah", "Lunch", "Istirahat", "Tidur siang", "Sholat Ashar", "Review pelajaran", "Sholat Maghrib", "Makan", "Membaca", "Sholat Isya", "Vocabulary", "Tidur"];
+        for (let i = 0; i < acts.length; i++) addTo(tabbody, times[i], times[i + 1], acts[i]);
 
-    let times3 = [6, 7, 9, 10, 10.3, 13, 13.15, 14, 16, 18, 19, 19.15, 20, 20.15, 21, 4.3];
-    let acts3 = ["Bangun & sholat", "Nonton TV", "Bantu mama", "Mandi", "Beresin rumah", "Lunch", "Istirahat", "Tidur siang", "Review pelajaran", "Sholat Maghrib", "Makan", "Membaca", "Sholat Isya", "Vocabulary", "Tidur"];
-    for (let i=0;i < acts3.length;i++) addTo(tabbody, times3[i], times3[i+1], acts3[i]);
+        const quotes = [
+            "Kamu lebih kuat dari apa yang kamu kira.",
+            "Setiap hari adalah kesempatan baru buat naik level.",
+            "Jangan takut gagal, takutlah kalau kamu berhenti mencoba.",
+            "Pelan tapi pasti juga tetap maju.",
+            "Yang penting bukan sempurna, tapi konsisten.",
+            "Belajar itu berat, tapi masa depanmu jauh lebih berharga.",
+            "Fokus pada progres kecil, hasil besar bakal nyusul.",
+            "Capek boleh, nyerah jangan.",
+            "Diri kamu di masa depan bakal bangga sama usaha hari ini.",
+            "Terus melangkah, bahkan kalau langkahnya kecil.",
+            "Hasil besar lahir dari kebiasaan kecil yang dilakukan terus menerus.",
+            "Nggak apa-apa mulai dari bawah, semua orang juga begitu.",
+            "Jangan bandingkan prosesmu sama pencapaian orang lain.",
+            "Kalau hari ini berat, tandanya kamu lagi bertumbuh.",
+            "Sabar itu bukan lemah—itu skill.",
+            "Disiplin itu sayang pada diri sendiri versi hardcore.",
+            "Kamu nggak harus cepat, kamu cuma harus jalan.",
+            "Keraguan itu wajar, yang penting kamu tetap lanjut.",
+            "Setiap usaha kamu hari ini adalah hadiah untuk dirimu di masa depan.",
+            "Langkah kecil hari ini bisa jadi perubahan besar besok."
+        ];
+        q.textContent = quotes[Math.floor(Math.random() * (quotes.length - 1))]
     </script>
 </body>
 </html>
