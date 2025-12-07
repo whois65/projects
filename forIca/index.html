@@ -70,7 +70,7 @@
 
     function mulaikonten() {
       befanimkata(1);
-      setTimeout(animkata(1), 400);
+      setTimeout(() => animkata(1), 400);
       suratin.style = "display:none";
       ket.style = "display:none";
       Content.style = "opacity:1;margin-top:4vh";
@@ -127,10 +127,11 @@
     }
     const animkata = x => {
       if (x === 1) {
-      kalimat.style = "transform:scale(1);";
-      kalimatb.style = "transform:scale(1);";
-      kalimatc.style = "transform:scale(1);";
-      } if (x === 2) {
+        kalimat.style = "transform:scale(1);";
+        kalimatb.style = "transform:scale(1);";
+        kalimatc.style = "transform:scale(1);";
+      } 
+      else if (x === 2) {
         kalimat.innerHTML = "Yeaayy! 😆";
         kalimatb.innerHTML = "Sekarang Icha chan adalah<br>Pacar Aku hhee 🥳💐";
         kalimatc.innerHTML = "";
@@ -147,10 +148,10 @@
       }
     }
 
-    function otomatis2() { befanimkata(2); setTimeout(animkata(2), 400); }
+    function otomatis2() { befanimkata(2); setTimeout(() => animkata(2), 400); }
     function otomatis2b() { kalimatb.innerHTML = ""; kalimatc.innerHTML = `Eitss.. 🏃 Tapi kita akan<br><b>PUTUS</b> dalam waktu: <b id="ctimer" style="font-size:24px">5</b>`; kalimatc.style.opacity = "1"; setTimeout(mulaict, 400); }
 
-    function otomatis3() { befanimkata(2); setTimeout(animkata(3), 400); }
+    function otomatis3() { befanimkata(2); setTimeout(() => animkata(3), 400); }
 
     function teksnimasi() {
       kalimatc.style = "opacity:1;text-align:left;font-size:16.5px";
