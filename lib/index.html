@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="author" content="Perguruan Panca Budi Medan">
+    <meta name="description" content="Website resmi Perpustakaan Perguruan Panca Budi Medan">
+    <meta name="keywords" content="Perpustakaan, Pancabudi, Buku Sekolah, Library">
+    <meta name="site_name" content="Perpustakaan Perguruan Panca Budi Medan">
+    <title>Perpustakaan Pancabudi</title>
+    <link href="https://pancabudi.sch.id/uploads/img/logo.jpg" rel="icon">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #1e3a8a;
+            --secondary: #3b82f6;
+            --accent: #facc15;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text: #0f172a;
+        }
+
+        body.dark {
+            --bg: #0f172a;
+            --card: #020617;
+            --text: #f8fafc;
+        }
+
+        * {
+            box-sizing: border-box;
+            transition: 0.3s ease;
+        }
+
+        .book,
+        nav,
+        footer {
+            user-select: none;
+        }
+
+
+        body {
+            margin: 0;
+            font-family: "Inter", sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            transition: all 0.5s ease-in-out;
+        }
+
+        /* ===== DARK MODE SLIDER ===== */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 52px;
+            height: 28px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            inset: 0;
+            background: #cbd5e1;
+            border-radius: 999px;
+        }
+
+        .slider::before {
+            content: "";
+            position: absolute;
+            height: 22px;
+            width: 22px;
+            left: 3px;
+            bottom: 3px;
+            background: #fff;
+            border-radius: 50%;
+        }
+
+        input:checked+.slider {
+            background: #3b82f6;
+        }
+
+        input:checked+.slider::before {
+            transform: translateX(24px);
+        }
+
+
+        /* ===== NAVBAR ===== */
+        nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(12px);
+            background: rgba(255, 255, 255, 0.7);
+            padding: 16px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .menu-btn {
+            display: none;
+        }
+
+        body.dark nav {
+            background: #020617b3;
+        }
+
+        nav h1 {
+            font-size: 1.2rem;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 15px;
+        }
+
+        .nav-menu li a {
+            text-decoration: none;
+            color: var(--text);
+            font-weight: 600;
+        }
+
+        body.dark .nav-menu li a {
+            color: #ddd;
+        }
+
+        .nav-menu li a:hover {
+            text-decoration: none;
+            color: rgb(70, 70, 70);
+        }
+
+        nav button {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        /* ===== HERO ===== */
+        .hero {
+            padding: 100px 24px 60px;
+            text-align: center;
+        }
+
+        .hero h2 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .hero p {
+            opacity: 0.8;
+            max-width: 600px;
+            margin: 16px auto;
+        }
+
+        .search-box {
+            margin-top: 32px;
+        }
+
+        .search-box input {
+            width: min(600px, 90%);
+            padding: 18px;
+            font-size: 1rem;
+            border-radius: 16px;
+            border: none;
+            outline: none;
+            box-shadow: 0 10px 30px #00000026;
+        }
+
+        #nothing {
+            width: 100%;
+            text-align: center;
+            font-size: 1.2rem;
+            opacity: 0.6;
+            margin-bottom: 60px;
+        }
+
+        /* ===== FILTER ===== */
+        .filter {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .filter button {
+            padding: 10px 16px;
+            margin: 6px;
+            border-radius: 999px;
+            border: none;
+            cursor: pointer;
+            background: var(--card);
+            box-shadow: 0 6px 20px #0000001a;
+        }
+
+        .filter button:hover {
+            background: #bbb;
+        }
+
+        .filter button.active {
+            background: var(--secondary);
+            color: white;
+            box-shadow: 0 8px 25px #3b82f655;
+            transform: translateY(-2px);
+        }
+
+        body.dark .filter button {
+            color: #f8fafc;
+        }
+
+        /* ===== BOOK GRID ===== */
+        .books {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 28px;
+            padding: 0 32px 80px;
+        }
+
+        .book {
+            position: relative;
+            background: var(--card);
+            border-radius: 20px;
+            padding: 16px 25px;
+            box-shadow: 0 20px 40px #00000026;
+            display: flex;
+            flex-direction: column;
+            animation: fadeUp 0.6s ease;
+        }
+
+        .book:hover {
+            transform: translateY(-10px);
+        }
+
+        .bookstats::before {
+            content: "● ";
+            font-size: 12px;
+        }
+
+
+        .bookstats {
+            position: absolute;
+            top: 0;
+            left: 10px;
+            border-radius: 15px;
+            padding: 5px;
+        }
+
+        .bookstats.available {
+            background: #57ff57;
+        }
+
+        .bookstats.borrowed {
+            background: #ff7575;
+        }
+
+        .book h3 {
+            margin: 12px 0 4px;
+        }
+
+        .book small {
+            opacity: 0.7;
+        }
+
+        .book button {
+            margin-top: auto;
+            padding: 10px;
+            border-radius: 12px;
+            border: none;
+            background: var(--secondary);
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .cover {
+            height: 180px;
+            border-radius: 12px;
+            overflow: hidden;
+            text-align: center;
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+        }
+
+        .cover img {
+            height: 100%;
+            width: 80%;
+            object-fit: cover;
+        }
+
+        #contact {
+            text-align: center;
+        }
+
+        #contact h2 {
+            font-size: 30px;
+        }
+
+        #contact a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            text-align: center;
+            padding: 24px;
+            opacity: 0.6;
+        }
+
+        /* ===== Modal ===== */
+        #modalDetail::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background: #0006;
+            z-index: -1;
+        }
+
+        #modalDetail {
+            height: auto;
+            max-height: 80vh;
+            overflow-y: auto;
+            width: min(500px, 90%);
+            height: 50%;
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            background: var(--card);
+            color: var(--text);
+            border-radius: 20px;
+            padding: 20px;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 30px 60px #00000055;
+            animation: zoomIn .3s ease;
+        }
+
+        #modalDetail h2 {
+            text-align: center;
+        }
+
+        #modalDetail button {
+            top: 5px;
+            right: 5px;
+            position: absolute;
+            background: none;
+            font-size: 20px;
+            color: #e00;
+            border: none;
+            border-radius: 10px;
+        }
+
+        /* ===== Animations ======*/
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes zoomIn {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(.9);
+            }
+
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+
+        /* ===== Responsive ======*/
+        @media (max-width: 700px) {
+            .nav-menu {
+                display: none;
+                position: absolute;
+                top: 64px;
+                right: -100%;
+                background: var(--card);
+                flex-direction: column;
+                padding: 16px;
+                border-radius: 12px;
+                box-shadow: 0 10px 30px #00000033;
+                transition: 0.3s ease;
+            }
+
+            .nav-menu.show {
+                right: 16px;
+                display: flex;
+            }
+
+            .menu-btn {
+                display: flex;
+                flex-direction: column;
+                cursor: pointer;
+            }
+
+            .menu-btn span {
+                padding: 1.5px 10px;
+                background: #000;
+                margin: 2px;
+            }
+
+            .menu-btn:hover span:nth-child(1) {
+                transform: rotate(-45deg) translateY(10px);
+            }
+
+            .menu-btn:hover span:nth-child(2) {
+                opacity: 0;
+            }
+
+            .menu-btn:hover span:nth-child(3) {
+                transform: rotate(45deg) translateY(-10px);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <h1>📚 Perpustakaan Pancabudi</h1>
+        <ul class="nav-menu">
+            <li><a href="https://pancabudi.sch.id">Home</a></li>
+            <li><a href="#contact">Kontak</a></li>
+            <li>🌙 <label class="switch"><input type="checkbox" onchange="toggleDark(this)"><span
+                        class="slider"></span></label></li>
+        </ul>
+        <div class="menu-btn" onclick="toggleMenu()"><span></span><span></span><span></span></div>
+    </nav>
+
+    <section class="hero">
+        <h2>Temukan Ilmu Tanpa Batas</h2>
+        <p>Perpustakaan sekolah untuk pelajar, mahasiswa, dan penjelajah ilmu.</p>
+
+        <div class="search-box">
+            <input id="search" placeholder="Cari judul buku..." oninput="applyFilterSearch()" autocomplete="off" spellcheck="false">
+        </div>
+    </section>
+
+    <div class="filter">
+        <button class="active" onclick="filter('all', this)">Semua</button>
+        <button onclick="filter('tech', this)">Teknologi</button>
+        <button onclick="filter('science', this)">Sains</button>
+        <button onclick="filter('math', this)">Matematika</button>
+    </div>
+
+
+    <section class="books" id="bookList"></section>
+    <div id="nothing" style="display: none;">
+        <p>Buku tidak ditemukan</p>
+    </div>
+
+    <section id="contact">
+        <h2>Kontak</h2>
+        <p>Hubungi kami.</p>
+        <p>Jl. Jend. Gatot Subroto KM 4.5 Sei Sikambing. Medan. Indonesia</p>
+        <p>Kode Pos: 20128</p>
+        <a href="mailto:medsos_gupab@pancabudi.sch.id">Email: medsos_gupab@pancabudi.sch.id</a><br><br>
+        <a href="https://wa.me/08116300044">+6281-1630-0044</a>
+    </section>
+
+    <footer id="footer">
+        <div class="container">
+            <h3>&copy; 2025 Perguruan Panca Budi Medan</h3>
+            <p style="font-size:12px;opacity:.5">
+                Website ini dikelola oleh tim pengembangan internal sekolah
+            </p>
+
+
+            <div class="credits">
+                <a href="https://pancabudi.sch.id">GUPAB</a>
+            </div>
+        </div>
+    </footer>
+
+    <div id="modalDetail"></div>
+
+    <script>
+        let currentFilter = "all";
+        const qi = x => document.getElementById(x),
+            qs = x => document.querySelector(x),
+            STATUS = {
+                AVAILABLE: "Tersedia",
+                BORROWED: "Dipinjam"
+            }, toggleMenu = () => document.querySelector(".nav-menu").classList.toggle("show"),
+            filter = (cat, el) => {
+                currentFilter = cat;
+                document.querySelectorAll(".filter button")
+                    .forEach(btn => btn.classList.remove("active"));
+                if (el) el.classList.add("active");
+                applyFilterSearch();
+            }, toggleDark = el => {
+                document.body.classList.toggle("dark", el.checked);
+                localStorage.setItem("dark", el.checked);
+            }, modalDetail = (text, stats) => {
+                const modal = qi("modalDetail"),
+                    closeBtn = document.createElement("button"),
+                    statusClass = stats === "Tersedia" ? "available" : "borrowed";
+
+                modal.style.display = "block";
+                modal.onclick = e => {
+                    if (e.target === modal) modal.style.display = "none";
+                };
+                modal.innerHTML = `<p class="bookstats ${statusClass}">${stats}</p><h2>Detail Buku</h2><p style="line-height:1.6">${text}</p><hr><small style="opacity:.6">Informasi dapat berubah sesuai data perpustakaan</small>`;
+                closeBtn.textContent = "x";
+                closeBtn.onclick = () => {
+                    modal.style.display = "none";
+                };
+                modal.appendChild(closeBtn);
+                document.body.appendChild(modal);
+            }, applyFilterSearch = () => {
+                const q = qi("search").value.toLowerCase();
+                let count = 0;
+
+                document.querySelectorAll(".book").forEach(b => {
+                    const matchCat = currentFilter === "all" || b.dataset.cat === currentFilter;
+                    const matchText = b.innerText.toLowerCase().includes(q);
+                    const show = matchCat && matchText;
+
+                    b.style.display = show ? "flex" : "none";
+                    if (show) count++;
+                });
+
+                qi("nothing").style.display = count ? "none" : "flex";
+            }
+
+        async function loadBooks() {
+            try {
+                const res = await fetch("books.json");
+                dataBooks = await res.json();
+                renderBooks(dataBooks);
+            } catch {
+                qi("nothing").style.display = "flex";
+                qi("nothing").innerText = "Data buku belum tersedia";
+            }
+        }
+
+        function renderBooks(data) {
+            qi("bookList").innerHTML = "";
+            data.forEach(i => {
+                const statusClass = i.status === STATUS.AVAILABLE ? "available" : "borrowed";
+                const div = document.createElement("div");
+                div.className = "book";
+                div.dataset.cat = i.cat;
+                div.innerHTML = `<p class="bookstats ${statusClass}">${i.status}</p><div class="cover"><img src="${i.cover}"></div><h3>${i.title}</h3><small>${i.author}</small><button onclick="modalDetail('${i.detail}', '${i.status}')">Detail</button>`;
+                qi("bookList").appendChild(div);
+            });
+        }
+
+        loadBooks();
+
+
+        if (localStorage.getItem("dark") === "true") {
+            document.body.classList.add("dark");
+            document.querySelector(".switch input").checked = true;
+        }
+
+    </script>
+</body>
+
+</html>
