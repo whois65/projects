@@ -1,0 +1,34 @@
+[
+    {
+        "author": "Stanley J. Farlow",
+        "cover": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTmc_TNRD1SYOMFd3jVVHu-H4eg4FwS7czBYg&s",
+        "title": "Advanced Mathematics",
+        "cat": "math",
+        "detail": "Buku matematika tingkat lanjut untuk siswa SMA dan mahasiswa.",
+        "status": "Tersedia"
+    },
+    {
+        "author": "Karl F. Kuhn",
+        "cover": "https://m.media-amazon.com/images/I/61WsDodSLSL._AC_UF1000,1000_QL80_.jpg",
+        "title": "Physics Basics",
+        "cat": "science",
+        "detail": "Soon",
+        "status": "Dipinjam"
+    },
+    {
+        "author": "Tom Tauili",
+        "cover": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTWubz0aEFKTgxU0htONen-8ghXBrCLSwKy0A&s",
+        "title": "Artificial Intelligence",
+        "cat": "tech",
+        "detail": "Soon",
+        "status": "Tersedia"
+    },
+    {
+        "author": "Perry Donham",
+        "cover": "https://m.media-amazon.com/images/I/61ZUj9RzWIL._AC_UF1000,1000_QL80_.jpg",
+        "title": "Introduction To Computer Science",
+        "cat": "tech",
+        "detail": "Soon",
+        "status": "Dipinjam"
+    }
+]
