@@ -1,34 +1,98 @@
 [
-    {
-        "author": "Stanley J. Farlow",
-        "cover": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTmc_TNRD1SYOMFd3jVVHu-H4eg4FwS7czBYg&s",
-        "title": "Advanced Mathematics",
-        "cat": "math",
-        "detail": "Buku matematika tingkat lanjut untuk siswa SMA dan mahasiswa.",
-        "status": "Tersedia"
-    },
-    {
-        "author": "Karl F. Kuhn",
-        "cover": "https://m.media-amazon.com/images/I/61WsDodSLSL._AC_UF1000,1000_QL80_.jpg",
-        "title": "Physics Basics",
-        "cat": "science",
-        "detail": "Soon",
-        "status": "Dipinjam"
-    },
-    {
-        "author": "Tom Tauili",
-        "cover": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTWubz0aEFKTgxU0htONen-8ghXBrCLSwKy0A&s",
-        "title": "Artificial Intelligence",
-        "cat": "tech",
-        "detail": "Soon",
-        "status": "Tersedia"
-    },
-    {
-        "author": "Perry Donham",
-        "cover": "https://m.media-amazon.com/images/I/61ZUj9RzWIL._AC_UF1000,1000_QL80_.jpg",
-        "title": "Introduction To Computer Science",
-        "cat": "tech",
-        "detail": "Soon",
-        "status": "Dipinjam"
-    }
+  {
+    "id": 1,
+    "title": "Advanced Mathematics",
+    "author": "Stanley J. Farlow",
+    "year": 2018,
+    "cat": "math",
+    "detail": "Buku matematika tingkat lanjut untuk siswa SMA dan mahasiswa.",
+    "cover": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTmc_TNRD1SYOMFd3jVVHu-H4eg4FwS7czBYg&s",
+    "status": "Tersedia",
+    "borrowedAt": null,
+    "returnAt": null
+  },
+  {
+    "id": 2,
+    "title": "Physics Basics",
+    "author": "Karl F. Kuhn",
+    "year": 2016,
+    "cat": "science",
+    "detail": "Buku dasar fisika untuk pelajar tingkat menengah.",
+    "cover": "https://m.media-amazon.com/images/I/61WsDodSLSL._AC_UF1000,1000_QL80_.jpg",
+    "status": "Dipinjam",
+    "borrowedAt": "2025-01-10",
+    "returnAt": "2025-01-17"
+  },
+  {
+    "id": 3,
+    "title": "Artificial Intelligence",
+    "author": "Tom Tauili",
+    "year": 2017,
+    "cat": "tech",
+    "detail": "Pengenalan konsep dasar kecerdasan buatan, machine learning, dan penerapannya.",
+    "cover": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTWubz0aEFKTgxU0htONen-8ghXBrCLSwKy0A&s",
+    "status": "Tersedia",
+    "borrowedAt": null,
+    "returnAt": null
+  },
+  {
+    "id": 4,
+    "title": "Introduction To Computer Science",
+    "author": "Perry Donham",
+    "year": 2015,
+    "cat": "tech",
+    "detail": "Buku pengantar ilmu komputer mencakup algoritma, data, dan pemrograman dasar.",
+    "cover": "https://m.media-amazon.com/images/I/61ZUj9RzWIL._AC_UF1000,1000_QL80_.jpg",
+    "status": "Dipinjam",
+    "borrowedAt": "2025-01-10",
+    "returnAt": "2025-01-17"
+  },
+  {
+    "id": 5,
+    "title": "Basic Algebra",
+    "author": "Richard G. Brown",
+    "year": 2014,
+    "cat": "math",
+    "detail": "Materi aljabar dasar untuk siswa SMA, mencakup persamaan dan fungsi.",
+    "cover": "https://m.media-amazon.com/images/I/71n1J9ZqYOL._AC_UF1000,1000_QL80_.jpg",
+    "status": "Tersedia",
+    "borrowedAt": null,
+    "returnAt": null
+  },
+  {
+    "id": 6,
+    "title": "Chemistry Essentials",
+    "author": "Linda R. Chen",
+    "year": 2019,
+    "cat": "science",
+    "detail": "Konsep dasar kimia seperti atom, reaksi, dan tabel periodik.",
+    "cover": "https://m.media-amazon.com/images/I/71b1XyKpEJL._AC_UF1000,1000_QL80_.jpg",
+    "status": "Tersedia",
+    "borrowedAt": null,
+    "returnAt": null
+  },
+  {
+    "id": 7,
+    "title": "Data Structures Fundamentals",
+    "author": "Michael T. Goodrich",
+    "year": 2020,
+    "cat": "tech",
+    "detail": "Pembahasan struktur data dasar seperti array, stack, queue, dan linked list.",
+    "cover": "https://m.media-amazon.com/images/I/71KJ4H1JcUL._AC_UF1000,1000_QL80_.jpg",
+    "status": "Dipinjam",
+    "borrowedAt": "2025-01-12",
+    "returnAt": "2025-01-19"
+  },
+  {
+    "id": 8,
+    "title": "Biology for Beginners",
+    "author": "Sarah J. Collins",
+    "year": 2013,
+    "cat": "science",
+    "detail": "Pengantar biologi meliputi sel, sistem organ, dan makhluk hidup.",
+    "cover": "https://m.media-amazon.com/images/I/71Fz5qZ9DVL._AC_UF1000,1000_QL80_.jpg",
+    "status": "Tersedia",
+    "borrowedAt": null,
+    "returnAt": null
+  }
 ]
