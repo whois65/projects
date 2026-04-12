@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Flashcards Pro</title>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: white;
+            margin: 0;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            background: linear-gradient(45deg, #22c55e, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 0;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from {
+                filter: drop-shadow(0 0 5px #22c55e);
+            }
+            to {
+                filter: drop-shadow(0 0 20px #3b82f6);
+            }
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .mode-btn {
+            background: linear-gradient(45deg, #22c55e, #16a34a);
+            color: white;
+            box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3);
+        }
+
+        .mode-btn.active {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(34, 197, 94, 0.5);
+        }
+
+        .quiz-btn {
+            background: linear-gradient(45deg, #3b82f6, #1d4ed8);
+            color: white;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+        }
+        button:active {
+            transform: translateY(0);
+        }
+
+        .card {
+            background: linear-gradient(145deg, #1e293b, #334155);
+            padding: 40px 30px;
+            border-radius: 20px;
+            margin: 20px 0;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            position: relative;
+            min-height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3em;
+         cursor: default; }
+.card.flash { cursor: pointer; }
+
+        .card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+
+        .card.flipped {
+            background: linear-gradient(145deg, #059669, #047857);
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            background: rgba(30, 41, 59, 0.8);
+            padding: 15px;
+            border-radius: 15px;
+            margin: 20px 0;
+            backdrop-filter: blur(10px);
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #22c55e;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .option {
+            background: linear-gradient(145deg, #334155, #475569);
+            color: white;
+            padding: 15px;
+            border-radius: 12px;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .option:hover {
+            background: linear-gradient(145deg, #475569, #64748b);
+            transform: translateY(-2px);
+        }
+
+        .correct {
+            background: linear-gradient(145deg, #22c55e, #16a34a) !important;
+            animation: pulse 0.6s ease;
+        }
+
+        .wrong {
+            background: linear-gradient(145deg, #ef4444, #dc2626) !important;
+            animation: shake 0.5s ease;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        @keyframes shake {
+            0%, 100% {
+                transform: translateX(0);
+            }
+            25% {
+                transform: translateX(-5px);
+            }
+            75% {
+                transform: translateX(5px);
+            }
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #22c55e, #3b82f6);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(145deg, #1e293b, #334155);
+            padding: 40px;
+            border-radius: 20px;
+            max-width: 500px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-calculator"></i> Math Flashcards</h1>
+        </div>
+
+        <div class="controls">
+            <button class="mode-btn" id="flashBtn" onclick="setMode('flash')">
+                <i class="fas fa-cards"></i> Flashcards
+            </button>
+            <button class="quiz-btn" id="quizBtn" onclick="setMode('quiz')">
+                <i class="fas fa-question-circle"></i> Quiz
+            </button>
+            <button onclick="showResults()" style="background: linear-gradient(45deg, #f59e0b, #d97706);">
+                <i class="fas fa-chart-bar"></i> Results
+            </button>
+        </div>
+
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-number" id="totalCards">
+                    0
+                </div>
+                <div>
+                    Total Cards
+                </div>
+            </div>
+            <div class="stat">
+                <div class="stat-number" id="score">
+                    0
+                </div>
+                <div>
+                    Score
+                </div>
+            </div>
+            <div class="stat">
+                <div class="stat-number" id="accuracy">
+                    0%
+                </div>
+                <div>
+                    Accuracy
+                </div>
+            </div>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+
+        <div id="card" class="card" onclick="flipCard()"></div>
+        <div id="quizOptions" class="options-grid"></div>
+
+        <div class="controls" style="justify-content: center; margin-top: 30px;">
+            <button onclick="previousCard()" style="background: #64748b;">
+                <i class="fas fa-arrow-left"></i> Previous
+            </button>
+            <button onclick="nextCard()" class="mode-btn">
+                <i class="fas fa-arrow-right"></i> Next
+            </button>
+            <button onclick="resetStats()" style="background: #ef4444;">
+                <i class="fas fa-redo"></i> Reset
+            </button>
+        </div>
+    </div>
+
+    <div id="resultsModal" class="modal">
+        <div class="modal-content">
+            <h2><i class="fas fa-trophy"></i> Quiz Results</h2>
+            <div id="resultsContent"></div>
+            <button onclick="closeResults()" class="mode-btn" style="margin-top: 20px; width: 100%;">
+                <i class="fas fa-play"></i> Play Again
+            </button>
+        </div>
+    </div>
+
+    <script>
+let rawData = {};
+let cards = [];
+let current = 0;
+let flipped = false;
+let mode = 'flash';
+let usedIndexes = [];
+
+let stats = JSON.parse(localStorage.getItem("mathStats")) || {
+    total: 0,
+    correct: 0,
+    wrong: 0,
+    streak: 0,
+    bestStreak: 0,
+    categories: {}
+};
+
+async function loadData() {
+    const res = await fetch("https://whois65.github.io/JSON/math.json");
+    rawData = await res.json();
+
+    cards = Object.entries(rawData).flatMap(([category, items]) =>
+        items.map(([formula, desc]) => ({
+            formula,
+            desc,
+            category
+        }))
+    );
+
+    document.getElementById('totalCards').textContent = cards.length;
+    nextCard();
+}
+
+function saveStats() {
+    localStorage.setItem("mathStats", JSON.stringify(stats));
+}
+
+function renderMath() {
+    MathJax.typesetClear();
+    MathJax.typesetPromise([document.getElementById('card')]);
+}
+
+function updateStats() {
+    document.getElementById('score').textContent = stats.correct;
+
+    const accuracy = stats.total > 0
+        ? Math.round((stats.correct / stats.total) * 100)
+        : 0;
+
+    document.getElementById('accuracy').textContent = accuracy + '%';
+
+    const progress = stats.total > 0
+        ? (stats.total / cards.length) * 100
+        : 0;
+
+    document.getElementById('progressFill').style.width = progress + '%';
+
+    saveStats();
+}
+
+function getRandomIndex() {
+    if (usedIndexes.length >= cards.length) usedIndexes = [];
+
+    let index;
+    do {
+        index = Math.floor(Math.random() * cards.length);
+    } while (usedIndexes.includes(index));
+
+    usedIndexes.push(index);
+    return index;
+}
+
+function showCard() {
+    const card = document.getElementById('card');
+    const quizDiv = document.getElementById('quizOptions');
+    quizDiv.innerHTML = '';
+
+    const currentCard = cards[current];
+
+    if (mode === 'flash') {
+        card.innerHTML = flipped
+            ? `<div><strong>${currentCard.desc}</strong><br><small>${currentCard.category}</small></div>`
+            : `\\(${currentCard.formula}\\)<div style="margin-top:10px;opacity:0.7;">${currentCard.category}</div>`;
+
+        card.classList.toggle('flipped', flipped);
+    } else {
+        card.innerHTML = `\\(${currentCard.formula}\\)<br><small style="opacity:0.7;">${currentCard.category}</small>`;
+        generateOptions();
+    }
+
+    renderMath();
+}
+
+function flipCard() {
+    if (mode !== 'flash') return;
+    flipped = !flipped;
+    showCard();
+}
+
+function nextCard() {
+    current = getRandomIndex();
+    flipped = false;
+    showCard();
+    updateStats();
+}
+
+function previousCard() {
+    current = (current - 1 + cards.length) % cards.length;
+    flipped = false;
+    showCard();
+}
+
+function setMode(m) {
+    mode = m;
+    document.querySelectorAll('.mode-btn, .quiz-btn')
+        .forEach(btn => btn.classList.remove('active'));
+
+    document.getElementById(m + 'Btn').classList.add('active');
+
+    flipped = false;
+    nextCard();
+}
+
+function generateOptions() {
+    const quizDiv = document.getElementById('quizOptions');
+    const currentCard = cards[current];
+
+    let options = [currentCard.desc];
+
+    while (options.length < 4) {
+        const rand = cards[Math.floor(Math.random() * cards.length)].desc;
+        if (!options.includes(rand)) options.push(rand);
+    }
+
+    options.sort(() => Math.random() - 0.5);
+
+    options.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.className = 'option';
+        btn.dataset.answer = opt;
+        btn.textContent = opt;
+
+        btn.onclick = () => checkAnswer(btn, opt);
+
+        quizDiv.appendChild(btn);
+    });
+}
+
+function checkAnswer(btn, opt) {
+    const currentCard = cards[current];
+    stats.total++;
+
+    const cat = currentCard.category;
+    if (!stats.categories[cat]) {
+        stats.categories[cat] = { total: 0, correct: 0 };
+    }
+
+    stats.categories[cat].total++;
+
+    document.querySelectorAll('.option')
+        .forEach(b => b.style.pointerEvents = 'none');
+
+    if (opt === currentCard.desc) {
+        stats.correct++;
+        stats.categories[cat].correct++;
+        stats.streak++;
+        stats.bestStreak = Math.max(stats.bestStreak, stats.streak);
+
+        btn.classList.add('correct');
+    } else {
+        stats.wrong++;
+        stats.streak = 0;
+
+        btn.classList.add('wrong');
+
+        // highlight correct
+        document.querySelectorAll('.option').forEach(b => {
+            if (b.dataset.answer === currentCard.desc) {
+                b.classList.add('correct');
+            }
+        });
+    }
+
+    updateStats();
+    setTimeout(nextCard, 1500);
+}
+
+function resetStats() {
+    stats = {
+        total: 0,
+        correct: 0,
+        wrong: 0,
+        streak: 0,
+        bestStreak: 0,
+        categories: {}
+    };
+    saveStats();
+    updateStats();
+}
+
+function showResults() {
+    const modal = document.getElementById('resultsModal');
+    const content = document.getElementById('resultsContent');
+
+    const accuracy = stats.total > 0
+        ? Math.round((stats.correct / stats.total) * 100)
+        : 0;
+
+    content.innerHTML = `
+        <div style="font-size:2em;margin:20px 0;">
+            ${stats.correct}/${stats.total} (${accuracy}%)
+        </div>
+        <div>🔥 Streak: ${stats.streak} | 🏆 Best: ${stats.bestStreak}</div>
+        <div style="text-align:left;margin-top:20px;">
+            ${Object.entries(stats.categories).map(([cat, d]) =>
+                `<div>${cat}: ${d.correct}/${d.total}</div>`
+            ).join('')}
+        </div>
+    `;
+
+    modal.style.display = 'block';
+}
+
+function closeResults() {
+    document.getElementById('resultsModal').style.display = 'none';
+}
+
+// init
+updateStats();
+loadData();
+
+document.getElementById('resultsModal').onclick = (e) => {
+    if (e.target.classList.contains('modal')) closeResults();
+};
+</script>
+</body>
+  </html>
