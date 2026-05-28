@@ -1,183 +1,1372 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Math Learning Pro</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MathRef — Formula Library</title>
+    <script> window.MathJax = { tex: { inlineMath: [['\\(', '\\)']] }, svg: { fontCache: 'global' }, options: { skipHtmlTags: ['script', 'noscript', 'style'] } };
 
-  <!-- MathJax -->
-  <script>
-    window.MathJax = {
-      tex: { inlineMath: [['\\(', '\\)']] },
-      svg: { fontCache: 'global' }
-    };
-  </script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Source+Sans+3:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #0f172a;
-      color: white;
-      margin: 0;
-      padding: 20px;
-    }
+        :root {
+            --f-head: 'Playfair Display', serif;
+            --f-body: 'Source Sans 3', sans-serif;
+            --f-mono: 'JetBrains Mono', monospace;
+            --tr: 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+            --r: 8px;
+            --r-lg: 14px;
+            --r-xl: 20px;
+        }
 
-    h1 {
-      text-align: center;
-      margin-bottom: 20px;
-    }
+        [data-theme="dark"] {
+            --bg: #0d0d12;
+            --bg2: #121218;
+            --surface: #191921;
+            --surface2: #1f1f2a;
+            --border: rgba(255, 255, 255, 0.06);
+            --border-s: rgba(255, 255, 255, 0.12);
+            --tx1: #e8e6f0;
+            --tx2: #8a8aa8;
+            --tx3: #42424e;
+            --acc: #e8a838;
+            --acc2: #f0c060;
+            --acc-s: rgba(232, 168, 56, 0.12);
+            --acc-g: rgba(232, 168, 56, 0.22);
+            --teal: #38c4b8;
+            --teal-s: rgba(56, 196, 184, 0.1);
+            --rose: #e86060;
+            --rose-s: rgba(232, 96, 96, 0.1);
+            --grn: #5cc87a;
+            --grn-s: rgba(92, 200, 122, 0.1);
+            --shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
 
-    #search {
-      width: 100%;
-      padding: 10px;
-      border-radius: 8px;
-      border: none;
-      margin-bottom: 20px;
-      font-size: 16px;
-    }
+        [data-theme="light"] {
+            --bg: #f5f2ec;
+            --bg2: #edeae3;
+            --surface: #ffffff;
+            --surface2: #f8f6f1;
+            --border: rgba(0, 0, 0, 0.08);
+            --border-s: rgba(0, 0, 0, 0.15);
+            --tx1: #1a1814;
+            --tx2: #6b6658;
+            --tx3: #bbb8b0;
+            --acc: #c47d0e;
+            --acc2: #e09420;
+            --acc-s: rgba(196, 125, 14, 0.1);
+            --acc-g: rgba(196, 125, 14, 0.18);
+            --teal: #1a8c84;
+            --teal-s: rgba(26, 140, 132, 0.08);
+            --rose: #c43030;
+            --rose-s: rgba(196, 48, 48, 0.08);
+            --grn: #2a8c48;
+            --grn-s: rgba(42, 140, 72, 0.08);
+            --shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
+        }
 
-    .section {
-      margin-bottom: 25px;
-    }
+        html {
+            scroll-behavior: smooth;
+        }
 
-    .section h2 {
-      cursor: pointer;
-      border-left: 5px solid #38bdf8;
-      padding-left: 10px;
-      margin-bottom: 10px;
-    }
+        body {
+            background: var(--bg);
+            font-family: var(--f-body);
+            color: var(--tx1);
+            min-height: 100vh;
+            transition: background var(--tr), color var(--tr);
+        }
 
-    .cards {
-      display: none;
-    }
+        /* Subtle texture overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.4;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+        }
 
-    .section.active .cards {
-      display: block;
-    }
+        /* ── Topbar ── */
+        .topbar {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: var(--bg2);
+            border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(12px);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+            height: 60px;
+            gap: 1rem;
+        }
 
-    .card {
-      background: #1e293b;
-      padding: 12px;
-      border-radius: 10px;
-      margin-bottom: 8px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
+        .logo {
+            font-family: var(--f-head);
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--tx1);
+            letter-spacing: -0.3px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
 
-    .card:hover {
-      background: #334155;
-    }
+        .logo-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--acc);
+            border-radius: 50%;
+            animation: logopulse 3s infinite;
+        }
 
-    .formula {
-      font-size: 16px;
-    }
+        @keyframes logopulse {
 
-    .desc {
-      font-size: 12px;
-      color: #94a3b8;
-    }
+            0%,
+            100% {
+                transform: scale(1);
+            }
 
-    .copy-btn {
-      background: #38bdf8;
-      border: none;
-      padding: 5px 8px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 12px;
-    }
+            50% {
+                transform: scale(1.4);
+            }
+        }
 
-    .copy-btn:hover {
-      background: #0ea5e9;
-    }
-  </style>
+        .search-wrap {
+            flex: 1;
+            max-width: 400px;
+            display: flex;
+            align-items: center;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--r);
+            overflow: hidden;
+            transition: border-color var(--tr), box-shadow var(--tr);
+        }
+
+        .search-wrap:focus-within {
+            border-color: var(--acc);
+            box-shadow: 0 0 0 3px var(--acc-s);
+        }
+
+        .search-icon {
+            padding: 0 10px;
+            color: var(--tx3);
+            font-size: 15px;
+            flex-shrink: 0;
+        }
+
+        .search-wrap input {
+            flex: 1;
+            background: none;
+            border: none;
+            outline: none;
+            font-family: var(--f-body);
+            font-size: 14px;
+            color: var(--tx1);
+            padding: 9px 10px 9px 0;
+        }
+
+        .search-wrap input::placeholder {
+            color: var(--tx3);
+        }
+
+        .topbar-right {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .icon-btn {
+            width: 34px;
+            height: 34px;
+            border-radius: var(--r);
+            background: var(--surface);
+            border: 1px solid var(--border);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+            transition: all var(--tr);
+            color: var(--tx2);
+            position: relative;
+        }
+
+        .icon-btn:hover {
+            background: var(--surface2);
+            border-color: var(--border-s);
+            color: var(--tx1);
+        }
+
+        .fav-count {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--acc);
+            color: #fff;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            font-size: 9px;
+            font-weight: 700;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .fav-count.show {
+            display: flex;
+        }
+
+        /* ── Main layout ── */
+        .main {
+            position: relative;
+            z-index: 1;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem 4rem;
+            display: grid;
+            grid-template-columns: 220px 1fr;
+            gap: 2rem;
+        }
+
+        @media(max-width:750px) {
+            .main {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                display: none;
+            }
+
+            .topbar {
+                padding: 0 1rem;
+            }
+        }
+
+        /* ── Sidebar ── */
+        .sidebar {
+            position: sticky;
+            top: 76px;
+            height: fit-content;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .sidebar-label {
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--tx3);
+            padding: 0 8px;
+            margin-bottom: 4px;
+        }
+
+        .cat-link {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 12px;
+            border-radius: var(--r);
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--tx2);
+            cursor: pointer;
+            transition: all var(--tr);
+            border: 1px solid transparent;
+            text-decoration: none;
+        }
+
+        .cat-link:hover {
+            background: var(--surface);
+            color: var(--tx1);
+            border-color: var(--border);
+        }
+
+        .cat-link.active {
+            background: var(--acc-s);
+            color: var(--acc);
+            border-color: rgba(232, 168, 56, 0.2);
+        }
+
+        .cat-badge {
+            font-size: 10px;
+            background: var(--surface2);
+            color: var(--tx3);
+            border-radius: 99px;
+            padding: 1px 7px;
+            border: 1px solid var(--border);
+        }
+
+        .cat-link.active .cat-badge {
+            background: var(--acc-s);
+            color: var(--acc);
+        }
+
+        .sidebar-divider {
+            height: 1px;
+            background: var(--border);
+            margin: 6px 0;
+        }
+
+        .progress-block {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--r-lg);
+            padding: 14px;
+            margin-top: 4px;
+        }
+
+        .prog-label {
+            font-size: 11px;
+            color: var(--tx3);
+            margin-bottom: 8px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .prog-bar {
+            height: 5px;
+            background: var(--surface2);
+            border-radius: 99px;
+            overflow: hidden;
+            margin-bottom: 6px;
+        }
+
+        .prog-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--acc), var(--acc2));
+            border-radius: 99px;
+            transition: width 0.6s ease;
+        }
+
+        .prog-stats {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: var(--tx2);
+        }
+
+        /* ── Content area ── */
+        .content-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.25rem;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .cat-pills {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .pill {
+            padding: 5px 14px;
+            border-radius: 99px;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--tx2);
+            cursor: pointer;
+            transition: all var(--tr);
+        }
+
+        .pill:hover {
+            border-color: var(--border-s);
+            color: var(--tx1);
+        }
+
+        .pill.active {
+            background: var(--acc);
+            border-color: var(--acc);
+            color: #fff;
+        }
+
+        .view-opts {
+            display: flex;
+            gap: 4px;
+        }
+
+        .view-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: var(--r);
+            background: var(--surface);
+            border: 1px solid var(--border);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: var(--tx3);
+            transition: all var(--tr);
+        }
+
+        .view-btn.active,
+        .view-btn:hover {
+            background: var(--acc-s);
+            border-color: var(--acc);
+            color: var(--acc);
+        }
+
+        /* ── Category sections ── */
+        .cat-section {
+            margin-bottom: 2rem;
+        }
+
+        .cat-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 14px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--r-lg) var(--r-lg) 0 0;
+            cursor: pointer;
+            user-select: none;
+            transition: background var(--tr);
+        }
+
+        .cat-header:hover {
+            background: var(--surface2);
+        }
+
+        .cat-header.collapsed {
+            border-radius: var(--r-lg);
+        }
+
+        .cat-title-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .cat-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .cat-name {
+            font-family: var(--f-head);
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--tx1);
+        }
+
+        .cat-count {
+            font-size: 11px;
+            color: var(--tx3);
+            margin-top: 1px;
+        }
+
+        .cat-arrow {
+            font-size: 12px;
+            color: var(--tx3);
+            transition: transform var(--tr);
+        }
+
+        .cat-header.collapsed .cat-arrow {
+            transform: rotate(-90deg);
+        }
+
+        .cards-wrap {
+            border: 1px solid var(--border);
+            border-top: none;
+            border-radius: 0 0 var(--r-lg) var(--r-lg);
+            overflow: hidden;
+        }
+
+        /* ── Formula card ── */
+        .fcard {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 16px;
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            transition: background var(--tr);
+            cursor: pointer;
+        }
+
+        .fcard:last-child {
+            border-bottom: none;
+        }
+
+        .fcard:hover {
+            background: var(--surface2);
+        }
+
+        .fcard.learned {
+            border-left: 3px solid var(--grn);
+        }
+
+        .fcard.bookmarked .bmark-btn {
+            color: var(--acc);
+        }
+
+        .fcard-left {
+            min-width: 0;
+        }
+
+        .fcard-formula {
+            font-size: 15px;
+            line-height: 1.5;
+            color: var(--tx1);
+            margin-bottom: 3px;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+
+        .fcard-formula::-webkit-scrollbar {
+            display: none;
+        }
+
+        .fcard-desc {
+            font-size: 12px;
+            color: var(--tx2);
+        }
+
+        .fcard-actions {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            flex-shrink: 0;
+        }
+
+        .act-btn {
+            width: 28px;
+            height: 28px;
+            border-radius: 7px;
+            border: 1px solid var(--border);
+            background: transparent;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: var(--tx3);
+            transition: all var(--tr);
+        }
+
+        .act-btn:hover {
+            background: var(--surface2);
+            border-color: var(--border-s);
+            color: var(--tx1);
+        }
+
+        .act-btn.bmark-btn.on {
+            color: var(--acc);
+            border-color: var(--acc);
+            background: var(--acc-s);
+        }
+
+        .act-btn.learn-btn.on {
+            color: var(--grn);
+            border-color: var(--grn);
+            background: var(--grn-s);
+        }
+
+        /* Grid view */
+        .cards-wrap.grid-view {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 8px;
+            border: none;
+            background: transparent;
+        }
+
+        .cards-wrap.grid-view .fcard {
+            border: 1px solid var(--border);
+            border-radius: var(--r-lg);
+            grid-template-columns: 1fr;
+            gap: 8px;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .cards-wrap.grid-view .fcard:last-child {
+            border-bottom: 1px solid var(--border);
+        }
+
+        .cards-wrap.grid-view .fcard-actions {
+            align-self: flex-end;
+        }
+
+        /* ── Modal ── */
+        .modal-bg {
+            position: fixed;
+            inset: 0;
+            z-index: 90;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(6px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .modal-bg.open {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--surface);
+            border: 1px solid var(--border-s);
+            border-radius: var(--r-xl);
+            max-width: 600px;
+            width: 100%;
+            box-shadow: var(--shadow);
+            animation: modalIn 0.2s ease;
+        }
+
+        @keyframes modalIn {
+            from {
+                transform: scale(0.94);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .modal-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .modal-title {
+            font-family: var(--f-head);
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--tx1);
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .modal-formula-big {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: var(--r);
+            padding: 1.5rem;
+            text-align: center;
+            font-size: 20px;
+            margin-bottom: 1rem;
+            overflow-x: auto;
+        }
+
+        .modal-meta {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 1rem;
+        }
+
+        .meta-item {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: var(--r);
+            padding: 10px 12px;
+        }
+
+        .meta-key {
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--tx3);
+            margin-bottom: 4px;
+        }
+
+        .meta-val {
+            font-size: 13px;
+            color: var(--tx1);
+            font-weight: 500;
+        }
+
+        .modal-latex {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: var(--r);
+            padding: 10px 14px;
+            font-family: var(--f-mono);
+            font-size: 12px;
+            color: var(--acc);
+            word-break: break-all;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .modal-btn {
+            flex: 1;
+            padding: 10px;
+            border-radius: var(--r);
+            font-family: var(--f-body);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--tr);
+            border: 1px solid var(--border);
+            background: var(--surface2);
+            color: var(--tx1);
+        }
+
+        .modal-btn:hover {
+            background: var(--border);
+        }
+
+        .modal-btn.primary {
+            background: var(--acc);
+            color: #fff;
+            border-color: var(--acc);
+        }
+
+        .modal-btn.primary:hover {
+            filter: brightness(1.1);
+        }
+
+        /* ── Quiz mode ── */
+        .quiz-banner {
+            background: linear-gradient(135deg, var(--acc-s), var(--teal-s));
+            border: 1px solid rgba(232, 168, 56, 0.2);
+            border-radius: var(--r-lg);
+            padding: 16px 20px;
+            display: none;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 1.5rem;
+        }
+
+        .quiz-banner.show {
+            display: flex;
+        }
+
+        .quiz-q {
+            flex: 1;
+        }
+
+        .quiz-q-label {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--acc);
+            margin-bottom: 6px;
+        }
+
+        .quiz-q-formula {
+            font-size: 18px;
+            color: var(--tx1);
+        }
+
+        .quiz-q-hint {
+            font-size: 12px;
+            color: var(--tx2);
+            margin-top: 4px;
+        }
+
+        .quiz-reveal-btn {
+            background: var(--acc);
+            color: #fff;
+            border: none;
+            border-radius: var(--r);
+            padding: 8px 16px;
+            font-family: var(--f-body);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: filter var(--tr);
+        }
+
+        .quiz-reveal-btn:hover {
+            filter: brightness(1.1);
+        }
+
+        .quiz-close {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--tx3);
+            font-size: 16px;
+            padding: 4px;
+        }
+
+        /* ── Toast ── */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            z-index: 99;
+            background: var(--surface2);
+            border: 1px solid var(--border-s);
+            border-radius: var(--r);
+            padding: 10px 18px;
+            font-size: 13px;
+            color: var(--tx1);
+            opacity: 0;
+            transition: all 0.2s;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* ── Empty state ── */
+        .empty {
+            text-align: center;
+            padding: 3rem;
+            grid-column: 1/-1;
+        }
+
+        .empty h3 {
+            font-family: var(--f-head);
+            font-size: 1.25rem;
+            color: var(--tx2);
+            margin-bottom: 0.5rem;
+        }
+
+        .empty p {
+            font-size: 13px;
+            color: var(--tx3);
+        }
+
+        /* ── Favs panel ── */
+        .favs-panel {
+            position: fixed;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            z-index: 80;
+            width: 320px;
+            background: var(--bg2);
+            border-left: 1px solid var(--border);
+            transform: translateX(100%);
+            transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .favs-panel.open {
+            transform: translateX(0);
+        }
+
+        .favs-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.25rem 1.25rem 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .favs-title {
+            font-family: var(--f-head);
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--tx1);
+        }
+
+        .favs-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+        }
+
+        .fav-item {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--r);
+            padding: 10px 12px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: border-color var(--tr);
+        }
+
+        .fav-item:hover {
+            border-color: var(--acc);
+        }
+
+        .fav-item-formula {
+            font-size: 13px;
+            color: var(--tx1);
+            margin-bottom: 3px;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+
+        .fav-item-formula::-webkit-scrollbar {
+            display: none;
+        }
+
+        .fav-item-desc {
+            font-size: 11px;
+            color: var(--tx3);
+        }
+
+        .favs-empty {
+            text-align: center;
+            padding: 2rem;
+            color: var(--tx3);
+            font-size: 13px;
+        }
+
+        /* Category icon colors */
+        .ic-alg {
+            background: rgba(232, 168, 56, 0.12);
+            color: var(--acc);
+        }
+
+        .ic-trig {
+            background: rgba(56, 196, 184, 0.12);
+            color: var(--teal);
+        }
+
+        .ic-geo {
+            background: rgba(92, 200, 122, 0.12);
+            color: var(--grn);
+        }
+
+        .ic-calc {
+            background: rgba(232, 96, 96, 0.12);
+            color: var(--rose);
+        }
+
+        .ic-log {
+            background: rgba(168, 120, 232, 0.12);
+            color: #a878e8;
+        }
+
+        .ic-seq {
+            background: rgba(232, 168, 56, 0.08);
+            color: var(--acc2);
+        }
+
+        .ic-prob {
+            background: rgba(56, 120, 232, 0.12);
+            color: #5088f0;
+        }
+
+        .ic-frac {
+            background: rgba(232, 168, 56, 0.1);
+            color: #d4a030;
+        }
+
+        .ic-root {
+            background: rgba(56, 196, 184, 0.1);
+            color: var(--teal);
+        }
+
+        .ic-exp {
+            background: rgba(232, 96, 96, 0.1);
+            color: var(--rose);
+        }
+    </style>
 </head>
-<body>
 
-<h1>Math Learning</h1>
+<body> <!-- Topbar -->
+    <div class="topbar">
+        <div class="logo">
+            <div class="logo-dot"></div> MathRef
+        </div>
+        <div class="search-wrap"> <span class="search-icon">⌕</span> <input type="text" id="search"
+                placeholder="Search formulas, topics…" oninput="onSearch()"> </div>
+        <div class="topbar-right"> <button class="icon-btn" onclick="toggleQuiz()" title="Quiz mode">✦</button>
+            <button class="icon-btn" onclick="toggleFavs()" title="Bookmarks"> ⬡<span class="fav-count"
+                    id="fav-count">0</span> </button> <button class="icon-btn" onclick="toggleTheme()" id="theme-btn"
+                title="Toggle theme">☀</button>
+        </div>
+    </div> <!-- Quiz banner -->
+    <div class="quiz-banner" id="quiz-banner">
+        <div class="quiz-q">
+            <div class="quiz-q-label">✦ Quiz Mode — Name this formula</div>
+            <div class="quiz-q-formula" id="quiz-formula"></div>
+            <div class="quiz-q-hint" id="quiz-hint" style="display:none;"></div>
+        </div> <button class="quiz-reveal-btn" id="quiz-reveal-btn" onclick="quizReveal()">Reveal answer</button>
+        <button class="quiz-reveal-btn" onclick="quizNext()" style="background:var(--teal);">Next ›</button> <button
+            class="quiz-close" onclick="toggleQuiz()">✕</button>
+    </div> <!-- Main -->
+    <div class="main"> <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-label">Categories</div> <a class="cat-link active" data-cat="all"
+                onclick="filterCat('all',this)">All formulas <span class="cat-badge" id="badge-all">0</span></a>
+            <div id="sidebar-cats"></div>
+            <div class="sidebar-divider"></div>
+            <div class="progress-block">
+                <div class="prog-label">📚 Learned</div>
+                <div class="prog-bar">
+                    <div class="prog-fill" id="prog-fill" style="width:0%"></div>
+                </div>
+                <div class="prog-stats"> <span id="prog-text">0 / 0 formulas</span> <span id="prog-pct">0%</span>
+                </div>
+            </div>
+        </aside> <!-- Content -->
+        <div class="content-right">
+            <div class="content-head">
+                <div class="cat-pills" id="cat-pills-mobile"></div>
+                <div class="view-opts"> <button class="view-btn active" id="list-btn" onclick="setView('list')"
+                        title="List view">☰</button> <button class="view-btn" id="grid-btn" onclick="setView('grid')"
+                        title="Grid view">⊞</button> </div>
+            </div>
+            <div id="content"></div>
+        </div>
+    </div> <!-- Modal -->
+    <div class="modal-bg" id="modal-bg" onclick="closeModal(event)">
+        <div class="modal" onclick="event.stopPropagation()">
+            <div class="modal-head">
+                <div class="modal-title" id="modal-title">Formula Details</div> <button class="icon-btn"
+                    onclick="closeModalDirect()">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-formula-big" id="modal-formula"></div>
+                <div class="modal-meta" id="modal-meta"></div>
+                <div class="meta-key" style="margin-bottom:6px;">LaTeX source</div>
+                <div class="modal-latex" id="modal-latex"></div>
+                <div class="modal-actions"> <button class="modal-btn" onclick="copyModalLatex()">📋 Copy
+                        LaTeX</button> <button class="modal-btn" id="modal-bmark-btn" onclick="toggleBmarkFromModal()">⬡
+                        Bookmark</button> <button class="modal-btn" id="modal-learn-btn"
+                        onclick="toggleLearnFromModal()">✓ Mark learned</button> <button class="modal-btn primary"
+                        onclick="closeModalDirect()">Done</button> </div>
+            </div>
+        </div>
+    </div> <!-- Favorites panel -->
+    <div class="favs-panel" id="favs-panel">
+        <div class="favs-head">
+            <div class="favs-title">⬡ Bookmarks</div> <button class="icon-btn" onclick="toggleFavs()">✕</button>
+        </div>
+        <div class="favs-body" id="favs-body"></div>
+    </div> <!-- Toast -->
+    <div class="toast" id="toast"></div>
+    <script>
+        const DATA = {
+            "Algebra": { icon: "α", icClass: "ic-alg", formulas: [["x = \\frac{-b \\pm \\sqrt{b^2-4ac}}{2a}", "Quadratic formula"], ["D = b^2-4ac", "Discriminant"], ["(a+b)^2 = a^2+2ab+b^2", "Binomial square"], ["(a-b)^2 = a^2-2ab+b^2", "Binomial square (negative)"], ["a^2-b^2 = (a-b)(a+b)", "Difference of squares"], ["(a+b)^3 = a^3+3a^2b+3ab^2+b^3", "Binomial cube"], ["(a-b)^3 = a^3-3a^2b+3ab^2-b^3", "Binomial cube (negative)"], ["\\sum_{i=1}^n i = \\frac{n(n+1)}{2}", "Sum of first n integers"], ["\\sum_{i=1}^n i^2 = \\frac{n(n+1)(2n+1)}{6}", "Sum of squares"],] }, "Sequences": { icon: "∑", icClass: "ic-seq", formulas: [["a_n = a_1+(n-1)d", "Arithmetic nth term"], ["S_n = \\frac{n}{2}(a_1+a_n)", "Arithmetic series sum"], ["S_n = \\frac{n}{2}(2a_1+(n-1)d)", "Arithmetic sum (expanded)"], ["a_n = a_1 r^{n-1}", "Geometric nth term"], ["S_n = a_1\\frac{1-r^n}{1-r}", "Geometric series sum"], ["S_\\infty = \\frac{a_1}{1-r}", "Infinite geometric series (|r|<1)"],] }, "Trigonometry": { icon: "θ", icClass: "ic-trig", formulas: [["\\sin^2 x+\\cos^2 x = 1", "Pythagorean identity"], ["1+\\tan^2 x = \\sec^2 x", "Pythagorean identity (tan)"], ["1+\\cot^2 x = \\csc^2 x", "Pythagorean identity (cot)"], ["\\tan x = \\frac{\\sin x}{\\cos x}", "Tangent definition"], ["\\sin(A+B) = \\sin A\\cos B+\\cos A\\sin B", "Sine addition"], ["\\cos(A+B) = \\cos A\\cos B-\\sin A\\sin B", "Cosine addition"], ["\\tan(A+B) = \\frac{\\tan A+\\tan B}{1-\\tan A\\tan B}", "Tangent addition"], ["\\sin 2x = 2\\sin x\\cos x", "Double angle sine"], ["\\cos 2x = \\cos^2 x-\\sin^2 x", "Double angle cosine"], ["\\sin(-x) = -\\sin x", "Sine odd function"], ["\\cos(-x) = \\cos x", "Cosine even function"],] }, "Logarithm": { icon: "㏒", icClass: "ic-log", formulas: [["\\log_a(xy) = \\log_a x+\\log_a y", "Log product rule"], ["\\log_a\\!\\left(\\tfrac{x}{y}\\right) = \\log_a x-\\log_a y", "Log quotient rule"], ["\\log_a(x^k) = k\\log_a x", "Log power rule"], ["\\log_a x = \\frac{\\ln x}{\\ln a}", "Change of base"], ["\\log_a a = 1", "Log of its base"], ["\\log_a 1 = 0", "Log of 1"], ["a^{\\log_a b} = b", "Inverse: exp undoes log"], ["\\ln e = 1", "Natural log of e"], ["\\ln e^x = x", "Natural log inverse"],] }, "Geometry": { icon: "△", icClass: "ic-geo", formulas: [["P = 2(l+w)", "Perimeter of rectangle"], ["A = lw", "Area of rectangle"], ["A = s^2", "Area of square"], ["C = 2\\pi r", "Circumference of circle"], ["A = \\pi r^2", "Area of circle"], ["A = \\tfrac{1}{2}bh", "Area of triangle"], ["A = \\tfrac{1}{2}(a+b)h", "Area of trapezoid"], ["c^2 = a^2+b^2", "Pythagorean theorem"], ["d = \\sqrt{(x_2-x_1)^2+(y_2-y_1)^2}", "Distance formula"], ["m = \\frac{y_2-y_1}{x_2-x_1}", "Slope formula"], ["V = \\pi r^2 h", "Volume of cylinder"], ["V = \\tfrac{4}{3}\\pi r^3", "Volume of sphere"], ["V = \\tfrac{1}{3}\\pi r^2 h", "Volume of cone"], ["SA = 4\\pi r^2", "Surface area of sphere"],] }, "Exponents": { icon: "xⁿ", icClass: "ic-exp", formulas: [["a^m \\cdot a^n = a^{m+n}", "Product of powers"], ["\\frac{a^m}{a^n} = a^{m-n}", "Quotient of powers"], ["(a^m)^n = a^{mn}", "Power of a power"], ["(ab)^n = a^n b^n", "Power of a product"], ["a^{-n} = \\frac{1}{a^n}", "Negative exponent"], ["a^{1/n} = \\sqrt[n]{a}", "Fractional exponent (root)"], ["a^{m/n} = \\sqrt[n]{a^m}", "Fractional exponent"], ["a^0 = 1", "Zero exponent"],] }, "Fractions": { icon: "½", icClass: "ic-frac", formulas: [["\\frac{a}{b}+\\frac{c}{d} = \\frac{ad+bc}{bd}", "Addition"], ["\\frac{a}{b}-\\frac{c}{d} = \\frac{ad-bc}{bd}", "Subtraction"], ["\\frac{a}{b}\\times\\frac{c}{d} = \\frac{ac}{bd}", "Multiplication"], ["\\frac{a}{b}\\div\\frac{c}{d} = \\frac{ad}{bc}", "Division"], ["a\\frac{b}{c} = \\frac{ac+b}{c}", "Mixed to improper fraction"],] }, "Radicals": { icon: "√", icClass: "ic-root", formulas: [["m\\sqrt{a}+n\\sqrt{a} = (m+n)\\sqrt{a}", "Addition of radicals"], ["m\\sqrt{a}-n\\sqrt{a} = (m-n)\\sqrt{a}", "Subtraction of radicals"], ["\\sqrt{a}\\cdot\\sqrt{b} = \\sqrt{ab}", "Multiplication of radicals"], ["\\frac{\\sqrt{a}}{\\sqrt{b}} = \\sqrt{\\frac{a}{b}}", "Division of radicals"], ["(\\sqrt{a})^2 = a", "Square of a radical"], ["\\sqrt[n]{a^m} = a^{m/n}", "Radical to exponent"],] }, "Probability": { icon: "℗", icClass: "ic-prob", formulas: [["P(A) = \\frac{\\text{favourable}}{\\text{total}}", "Basic probability"], ["P(A\\cup B) = P(A)+P(B)-P(A\\cap B)", "Union of events"], ["P(A\\cap B) = P(A)\\cdot P(B)", "Independent events"], ["P(A|B) = \\frac{P(A\\cap B)}{P(B)}", "Conditional probability"], ["\\mu = \\frac{\\sum x}{n}", "Mean"], ["\\sigma^2 = \\frac{\\sum(x-\\mu)^2}{n}", "Variance"], ["\\sigma = \\sqrt{\\frac{\\sum(x-\\mu)^2}{n}}", "Standard deviation"], ["\\binom{n}{k} = \\frac{n!}{k!(n-k)!}", "Combinations"], ["P(n,k) = \\frac{n!}{(n-k)!}", "Permutations"],] }, "Calculus": { icon: "∫", icClass: "ic-calc", formulas: [["\\frac{d}{dx}(x^n) = nx^{n-1}", "Power rule"], ["\\frac{d}{dx}(\\sin x) = \\cos x", "Derivative of sin"], ["\\frac{d}{dx}(\\cos x) = -\\sin x", "Derivative of cos"], ["\\frac{d}{dx}(e^x) = e^x", "Derivative of e^x"], ["\\frac{d}{dx}(\\ln x) = \\frac{1}{x}", "Derivative of ln"], ["(fg)' = f'g+fg'", "Product rule"], ["\\left(\\frac{f}{g}\\right)' = \\frac{f'g-fg'}{g^2}", "Quotient rule"], ["\\int x^n\\,dx = \\frac{x^{n+1}}{n+1}+C", "Power integral"], ["\\int e^x\\,dx = e^x+C", "Integral of e^x"], ["\\int \\frac{1}{x}\\,dx = \\ln|x|+C", "Log integral"], ["\\int \\sin x\\,dx = -\\cos x+C", "Integral of sin"], ["\\int \\cos x\\,dx = \\sin x+C", "Integral of cos"],] },
+        };
+        let bookmarks = new Set(JSON.parse(localStorage.getItem('mref_bmarks') || '[]'));
+        let learned = new Set(JSON.parse(localStorage.getItem('mref_learned') || '[]'));
+        let viewMode = 'list';
+        let currentCat = 'all';
+        let quizAll = [];
+        let quizIdx = 0;
+        let quizRevealed = false;
+        let modalCurrentKey = '';
+        function key(cat, i) {
+            return cat + '::' + i;
 
-<input type="text" id="search" placeholder="Search formula...">
+        } function save() {
+            localStorage.setItem('mref_bmarks', JSON.stringify([...bookmarks]));
+            localStorage.setItem('mref_learned', JSON.stringify([...learned]));
 
-<div id="content"></div>
+        } function toast(msg) {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.classList.add('show');
+            clearTimeout(t._t);
+            t._t = setTimeout(() => t.classList.remove('show'), 2000);
 
-<script>
-let allCards = [];
+        } /* ── Theme ── */ function toggleTheme() {
+            const html = document.documentElement;
+            const dark = html.dataset.theme === 'dark';
+            html.dataset.theme = dark ? 'light' : 'dark';
+            document.getElementById('theme-btn').textContent = dark ? '☽' : '☀';
+        } /* ── Build UI ── */ function build() {
+            const container = document.getElementById('content');
+            const sidebarCats = document.getElementById('sidebar-cats');
+            const pillsMobile = document.getElementById('cat-pills-mobile');
+            container.innerHTML = '';
+            sidebarCats.innerHTML = '';
+            pillsMobile.innerHTML = '';
+            quizAll = [];
+            let total = 0;
+            for (const cat in DATA) { total += DATA[cat].formulas.length;
 
-async function loadData() {
-  const res = await fetch("https://whois65.github.io/JSON/math.json");
-  const data = await res.json();
+            } document.getElementById('badge-all').textContent = total;
+            const allPill = document.createElement('button');
+            allPill.className = 'pill' + (currentCat === 'all' ? ' active' : '');
+            allPill.textContent = 'All';
+            allPill.onclick = () => filterCat('all', allPill);
+            pillsMobile.appendChild(allPill);
+            for (const cat in DATA) {
+                const { icon, icClass, formulas } = DATA[cat];
+                const link = document.createElement('a');
+                link.className = 'cat-link' + (currentCat === cat ? ' active' : '');
+                link.dataset.cat = cat;
+                link.innerHTML = `${cat} <span class="cat-badge">${formulas.length}</span>`;
+                link.onclick = () => filterCat(cat, link);
+                sidebarCats.appendChild(link);
+                const pill = document.createElement('button');
+                pill.className = 'pill' + (currentCat === cat ? ' active' : '');
+                pill.textContent = cat;
+                pill.onclick = () => filterCat(cat, pill);
+                pillsMobile.appendChild(pill);
+const section = document.createElement('div');
+                section.className = 'cat-section';
+                section.id = 'cat-' + cat;
+                if (currentCat !== 'all' && currentCat !== cat) section.style.display = 'none';
+                const header = document.createElement('div');
+                header.className = 'cat-header';
+                header.innerHTML = `<div class="cat-title-row"> <div class="cat-icon ${icClass}">${icon}</div> <div><div class="cat-name">${cat}</div><div class="cat-count">${formulas.length} formulas</div></div> </div><span class="cat-arrow">▼</span>`;
+                header.onclick = () => {
+                    header.classList.toggle('collapsed');
+                    wrap.style.display = header.classList.contains('collapsed') ? 'none' : '';
 
-  const container = document.getElementById("content");
+                };
+                const wrap = document.createElement('div');
+                wrap.className = 'cards-wrap' + (viewMode === 'grid' ? ' grid-view' : '');
+                formulas.forEach((f, i) => {
+                    const k = key(cat, i);
+                    quizAll.push({ latex: f[0], desc: f[1], cat });
+                    const card = document.createElement('div');
+                    card.className = 'fcard' + (learned.has(k) ? ' learned' : '');
+                    card.innerHTML = ` <div class="fcard-left"> <div class="fcard-formula">\\(${f[0]}\\)</div> <div class="fcard-desc">${f[1]}</div> </div> <div class="fcard-actions"> <button class="act-btn bmark-btn${bookmarks.has(k) ? ' on' : ''}" title="Bookmark" onclick="event.stopPropagation();toggleBmark('${k}',this)">⬡</button> <button class="act-btn learn-btn${learned.has(k) ? ' on' : ''}" title="Mark learned" onclick="event.stopPropagation();toggleLearn('${k}',this)">✓</button> <button class="act-btn" title="Copy LaTeX" onclick="event.stopPropagation();copyLatex('${f[0].replace(/'/g, "\\'")}')">📋</button> </div>`;
+                    card.addEventListener('click', () => openModal(k, f[0], f[1], cat));
+                    wrap.appendChild(card);
+                });
+                section.appendChild(header);
+                section.appendChild(wrap);
+                container.appendChild(section);
+            } if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise([container]);
+            updateProgress();
+            updateFavCount();
+        } function filterCat(cat, el) {
+            currentCat = cat;
+            document.querySelectorAll('.cat-link,.pill').forEach(e => e.classList.remove('active'));
+            if (el) el.classList.add('active');
+            document.querySelectorAll(`.cat-link[data-cat="${cat}"]`).forEach(e => e.classList.add('active'));
+            document.querySelectorAll('.cat-section').forEach(s => {
+                s.style.display = (cat === 'all' || s.id === 'cat-' + cat) ? '' : 'none';
 
-  for (const category in data) {
-    const section = document.createElement("div");
-    section.className = "section";
+            });
+        }
+        /* ── Search ── */
+        function onSearch() {
+            const q = document.getElementById('search').value.toLowerCase().trim();
+            document.querySelectorAll('.fcard').forEach(card => {
+                const txt = card.textContent.toLowerCase();
+                card.style.display = (!q || txt.includes(q)) ? '' : 'none';
 
-    const title = document.createElement("h2");
-    title.textContent = category;
+            });
+            if (q) {
+                document.querySelectorAll('.cat-section').forEach(s => s.style.display = '');
+                document.querySelectorAll('.cat-header').forEach(h => {
+                    h.classList.remove('collapsed');
+                    h.nextElementSibling.style.display = '';
 
-    const cardsContainer = document.createElement("div");
-    cardsContainer.className = "cards";
+                });
+            }
+        } /* ── View mode ── */ function setView(v) {
+            viewMode = v;
+            document.getElementById('list-btn').classList.toggle('active', v === 'list');
+            document.getElementById('grid-btn').classList.toggle('active', v === 'grid');
+            document.querySelectorAll('.cards-wrap').forEach(w => {
+                w.classList.toggle('grid-view', v === 'grid');
 
-    title.onclick = () => {
-      section.classList.toggle("active");
-    };
+            });
+        } /* ── Bookmark ── */ function toggleBmark(k, btn) {
+            if (bookmarks.has(k)) {
+                bookmarks.delete(k);
+                btn && btn.classList.remove('on');
+                toast('Bookmark removed');
 
-    data[category].forEach(item => {
-      const card = document.createElement("div");
-      card.className = "card";
+            } else {
+                bookmarks.add(k);
+                btn && btn.classList.add('on');
+                toast('✦ Bookmarked!');
 
-      const textWrap = document.createElement("div");
+            } save();
+            updateFavCount();
+            renderFavs();
+        } function updateFavCount() {
+            const el = document.getElementById('fav-count');
+            el.textContent = bookmarks.size;
+            el.classList.toggle('show', bookmarks.size > 0);
 
-      const formula = document.createElement("div");
-      formula.className = "formula";
-      formula.innerHTML = `\\(${item[0]}\\)`;
+        } /* ── Learned ── */ function toggleLearn(k, btn) {
+            const card = btn ? btn.closest('.fcard') : null;
+            if (learned.has(k)) {
+                learned.delete(k);
+                btn && btn.classList.remove('on');
+                card && card.classList.remove('learned');
+                toast('Unmarked');
 
-      const desc = document.createElement("div");
-      desc.className = "desc";
-      desc.textContent = item[1];
+            } else {
+                learned.add(k);
+                btn && btn.classList.add('on');
+                card && card.classList.add('learned');
+                toast('✓ Marked as learned!');
 
-      textWrap.appendChild(formula);
-      textWrap.appendChild(desc);
+            } save();
+            updateProgress();
+        } function updateProgress() {
+            let total = 0;
+            for (const cat in DATA) total += DATA[cat].formulas.length;
+            const pct = total ? Math.round(learned.size / total * 100) : 0;
+            document.getElementById('prog-fill').style.width = pct + '%';
+            document.getElementById('prog-text').textContent = learned.size + ' / ' + total + ' formulas';
+            document.getElementById('prog-pct').textContent = pct + '%';
 
-      const copyBtn = document.createElement("button");
-      copyBtn.className = "copy-btn";
-      copyBtn.textContent = "Copy";
+        } /* ── Copy ── */ function copyLatex(latex) {
+            navigator.clipboard.writeText(latex).then(() => toast('LaTeX copied!')).catch(() => toast('Copy failed'));
 
-      copyBtn.onclick = () => {
-        navigator.clipboard.writeText(item[0]);
-        copyBtn.textContent = "✔";
-        setTimeout(() => copyBtn.textContent = "Copy", 1000);
-      };
+        } /* ── Modal ── */ function openModal(k, latex, desc, cat) {
+            modalCurrentKey = k;
+            document.getElementById('modal-title').textContent = desc;
+            document.getElementById('modal-formula').innerHTML = '\\(' + latex + '\\)';
+            document.getElementById('modal-latex').textContent = latex;
+            document.getElementById('modal-meta').innerHTML = ` <div class="meta-item"><div class="meta-key">Category</div><div class="meta-val">${cat}</div></div> <div class="meta-item"><div class="meta-key">Description</div><div class="meta-val">${desc}</div></div> `;
+            const bb = document.getElementById('modal-bmark-btn');
+            const lb = document.getElementById('modal-learn-btn');
+            bb.textContent = bookmarks.has(k) ? '★ Bookmarked' : '⬡ Bookmark';
+            lb.textContent = learned.has(k) ? '✓ Learned' : '✓ Mark learned';
+            document.getElementById('modal-bg').classList.add('open');
+            if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise([document.getElementById('modal-formula')]);
 
-      card.appendChild(textWrap);
-      card.appendChild(copyBtn);
+        } function closeModal(e) {
+            if (e.target === document.getElementById('modal-bg')) closeModalDirect();
 
-      cardsContainer.appendChild(card);
+        } function closeModalDirect() {
+            document.getElementById('modal-bg').classList.remove('open');
 
-      allCards.push({ card, text: item.join(" ").toLowerCase() });
-    });
+        } function copyModalLatex() {
+            copyLatex(document.getElementById('modal-latex').textContent);
 
-    section.appendChild(title);
-    section.appendChild(cardsContainer);
-    container.appendChild(section);
-  }
+        } function toggleBmarkFromModal() {
+            const k = modalCurrentKey;
+            if (bookmarks.has(k)) {
+                bookmarks.delete(k);
+                document.getElementById('modal-bmark-btn').textContent = '⬡ Bookmark';
 
-  MathJax.typesetPromise();
-}
+            } else {
+                bookmarks.add(k);
+                document.getElementById('modal-bmark-btn').textContent = '★ Bookmarked';
 
-// 🔍 Search
-document.getElementById("search").addEventListener("input", (e) => {
-  const value = e.target.value.toLowerCase();
+            } save();
+            updateFavCount();
+            renderFavs();
+            constcard = document.querySelector('.fcard');
+            syncCardBtns();
+        } function toggleLearnFromModal() {
+            const k = modalCurrentKey;
+            if (learned.has(k)) {
+                learned.delete(k);
+                document.getElementById('modal-learn-btn').textContent = '✓ Mark learned';
 
-  allCards.forEach(obj => {
-    obj.card.style.display = obj.text.includes(value) ? "flex" : "none";
-  });
-});
+            } else {
+                learned.add(k);
+                document.getElementById('modal-learn-btn').textContent = '✓ Learned';
 
-loadData();
-</script>
+            } save();
+            updateProgress();
+            syncCardBtns();
+        } function syncCardBtns() {
+            document.querySelectorAll('.fcard').forEach(card => {
+                const bb = card.querySelector('.bmark-btn');
+                const lb = card.querySelector('.learn-btn');
+            });
+        } /* ── Favs panel ── */ function toggleFavs() {
+            document.getElementById('favs-panel').classList.toggle('open');
+            renderFavs();
 
+        } function renderFavs() {
+            const body = document.getElementById('favs-body');
+            if (!bookmarks.size) {
+                body.innerHTML = '<div class="favs-empty">No bookmarks yet.<br>Click ⬡ on any formula to save it.</div>';
+                return;
+
+            } let html = '';
+            for (const cat in DATA) {
+                DATA[cat].formulas.forEach((f, i) => {
+                    const k = key(cat, i);
+                    if (!bookmarks.has(k)) return;
+                    html += `<div class="fav-item" onclick="openModal('${k}','${f[0].replace(/'/g, "\\'")}','${f[1].replace(/'/g, "\\'")}','${cat}')"> <div class="fav-item-formula">\\(${f[0]}\\)</div> <div class="fav-item-desc">${f[1]} — ${cat}</div> </div>`;
+                });
+            } body.innerHTML = html;
+            if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise([body]);
+        } /* ── Quiz mode ── */ function toggleQuiz() {
+            const banner = document.getElementById('quiz-banner');
+            const isOpen = banner.classList.contains('show');
+            if (isOpen) {
+                banner.classList.remove('show');
+
+            } else {
+                quizAll = [];
+                for (const cat in DATA) DATA[cat].formulas.forEach(f => quizAll.push({ latex: f[0], desc: f[1], cat }));
+                quizAll.sort(() => Math.random() - 0.5);
+                quizIdx = 0;
+                banner.classList.add('show');
+                renderQuiz();
+            }
+        } function renderQuiz() {
+            if (!quizAll.length) return;
+            const q = quizAll[quizIdx % quizAll.length];
+            quizRevealed = false;
+            document.getElementById('quiz-formula').innerHTML = '\\(' + q.latex + '\\)';
+            document.getElementById('quiz-hint').style.display = 'none';
+            document.getElementById('quiz-hint').textContent = '';
+            document.getElementById('quiz-reveal-btn').textContent = 'Reveal answer';
+            if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise([document.getElementById('quiz-formula')]);
+
+        } function quizReveal() {
+            const q = quizAll[quizIdx % quizAll.length];
+            const hint = document.getElementById('quiz-hint');
+            hint.textContent = '→ ' + q.desc + ' (' + q.cat + ')';
+            hint.style.display = 'block';
+            document.getElementById('quiz-reveal-btn').textContent = '✓ Got it';
+            quizRevealed = true;
+
+        }
+        function quizNext() { quizIdx++;
+            renderQuiz();
+
+        } /* ── Init ── */
+        build();
+    </script>
 </body>
+
 </html>
