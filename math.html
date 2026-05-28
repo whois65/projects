@@ -1,555 +1,977 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Math Flashcards Pro</title>
-    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <style>
-        * {
-            box-sizing: border-box;
-        }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-            color: white;
-            margin: 0;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MathRef — Unified Formula Library</title>
+<script>window.MathJax={tex:{inlineMath:[['\\(','\\)']]},svg:{fontCache:'global'},options:{skipHtmlTags:['script','noscript','style']}};</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ff-head:'DM Serif Display',serif;
+  --ff-body:'DM Sans',sans-serif;
+  --ff-mono:'JetBrains Mono',monospace;
+  --tr:0.16s cubic-bezier(0.4,0,0.2,1);
+  --r:8px;--r-lg:14px;--r-xl:20px;
+}
+[data-theme="dark"]{
+  --bg:#0e0e13;--bg2:#13131a;--surface:#1a1a24;--surface2:#21212e;
+  --border:rgba(255,255,255,0.07);--border-s:rgba(255,255,255,0.13);
+  --tx1:#eeeaf8;--tx2:#8b89a8;--tx3:#3e3e52;
+  --acc:#7c6af7;--acc2:#a899ff;--acc-s:rgba(124,106,247,0.12);--acc-g:rgba(124,106,247,0.22);
+  --teal:#3dbfb0;--teal-s:rgba(61,191,176,0.1);
+  --rose:#f06070;--rose-s:rgba(240,96,112,0.1);
+  --amber:#f0a830;--amber-s:rgba(240,168,48,0.1);
+  --grn:#4ecb84;--grn-s:rgba(78,203,132,0.1);
+  --shadow:0 24px 64px rgba(0,0,0,0.55);
+}
+[data-theme="light"]{
+  --bg:#f4f3fa;--bg2:#eceaf5;--surface:#ffffff;--surface2:#f7f6fc;
+  --border:rgba(0,0,0,0.07);--border-s:rgba(0,0,0,0.14);
+  --tx1:#1a1830;--tx2:#6260808;--tx3:#b8b6cc;
+  --acc:#5a4ae8;--acc2:#7c6af7;--acc-s:rgba(90,74,232,0.09);--acc-g:rgba(90,74,232,0.17);
+  --teal:#1a9e92;--teal-s:rgba(26,158,146,0.08);
+  --rose:#d94050;--rose-s:rgba(217,64,80,0.08);
+  --amber:#c8840e;--amber-s:rgba(200,132,14,0.08);
+  --grn:#1f9e58;--grn-s:rgba(31,158,88,0.08);
+  --shadow:0 12px 40px rgba(0,0,0,0.1);
+  --tx2:#636280;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);font-family:var(--ff-body);color:var(--tx1);min-height:100vh;font-size:15px;line-height:1.6;transition:background var(--tr),color var(--tr)}
 
-        .container {
-            max-width: 800px;
-            margin: auto;
-            padding: 20px;
-        }
+/* ── NAV ── */
+.nav{position:sticky;top:0;z-index:60;background:var(--bg2);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 1.5rem;height:58px;gap:1rem;backdrop-filter:blur(16px)}
+.nav-logo{font-family:var(--ff-head);font-size:1.3rem;color:var(--tx1);flex-shrink:0;display:flex;align-items:center;gap:9px;letter-spacing:-0.2px}
+.logo-mark{width:28px;height:28px;background:var(--acc);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:var(--ff-head);font-size:13px;color:#fff;font-style:italic}
+.search-box{flex:1;max-width:380px;display:flex;align-items:center;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;transition:border-color var(--tr),box-shadow var(--tr)}
+.search-box:focus-within{border-color:var(--acc);box-shadow:0 0 0 3px var(--acc-s)}
+.search-box svg{margin:0 10px;color:var(--tx3);flex-shrink:0}
+.search-box input{flex:1;background:none;border:none;outline:none;font-family:var(--ff-body);font-size:14px;color:var(--tx1);padding:9px 10px 9px 0}
+.search-box input::placeholder{color:var(--tx3)}
+.nav-right{display:flex;gap:6px;align-items:center;margin-left:auto}
+.nav-btn{height:34px;padding:0 12px;border-radius:var(--r);background:var(--surface);border:1px solid var(--border);cursor:pointer;display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--tx2);transition:all var(--tr);white-space:nowrap;font-family:var(--ff-body)}
+.nav-btn:hover{background:var(--surface2);color:var(--tx1);border-color:var(--border-s)}
+.nav-btn.active{background:var(--acc-s);color:var(--acc);border-color:rgba(124,106,247,0.25)}
+.nav-btn svg{flex-shrink:0}
+.fav-dot{width:16px;height:16px;background:var(--acc);color:#fff;border-radius:50%;font-size:9px;font-weight:700;display:none;align-items:center;justify-content:center}
+.fav-dot.on{display:flex}
 
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
+/* ── TABS ── */
+.tabs-bar{display:flex;gap:0;border-bottom:1px solid var(--border);background:var(--bg2);padding:0 1.5rem;overflow-x:auto;scrollbar-width:none}
+.tabs-bar::-webkit-scrollbar{display:none}
+.tab{padding:11px 18px;font-size:13px;font-weight:500;color:var(--tx2);cursor:pointer;border-bottom:2px solid transparent;transition:all var(--tr);white-space:nowrap;display:flex;align-items:center;gap:7px}
+.tab:hover{color:var(--tx1)}
+.tab.active{color:var(--acc);border-bottom-color:var(--acc)}
+.tab-badge{font-size:10px;background:var(--surface2);color:var(--tx3);border-radius:99px;padding:1px 6px;border:1px solid var(--border)}
+.tab.active .tab-badge{background:var(--acc-s);color:var(--acc);border-color:transparent}
 
-        .header h1 {
-            font-size: 2.5em;
-            background: linear-gradient(45deg, #22c55e, #3b82f6);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin: 0;
-            animation: glow 2s ease-in-out infinite alternate;
-        }
+/* ── LAYOUT ── */
+.app-body{max-width:1140px;margin:0 auto;padding:1.5rem 1.5rem 4rem;display:grid;grid-template-columns:210px 1fr;gap:1.75rem}
+@media(max-width:780px){.app-body{grid-template-columns:1fr}.sidebar{display:none}}
 
-        @keyframes glow {
-            from {
-                filter: drop-shadow(0 0 5px #22c55e);
-            }
-            to {
-                filter: drop-shadow(0 0 20px #3b82f6);
-            }
-        }
+/* ── SIDEBAR ── */
+.sidebar{position:sticky;top:100px;height:fit-content;display:flex;flex-direction:column;gap:4px}
+.sb-label{font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--tx3);padding:0 10px;margin-bottom:4px;margin-top:8px}
+.sb-link{display:flex;align-items:center;justify-content:space-between;padding:7px 10px;border-radius:var(--r);font-size:13px;font-weight:500;color:var(--tx2);cursor:pointer;transition:all var(--tr);border:1px solid transparent}
+.sb-link:hover{background:var(--surface);color:var(--tx1);border-color:var(--border)}
+.sb-link.active{background:var(--acc-s);color:var(--acc);border-color:rgba(124,106,247,0.2)}
+.sb-badge{font-size:10px;background:var(--surface2);color:var(--tx3);border-radius:99px;padding:1px 7px;border:1px solid var(--border)}
+.sb-link.active .sb-badge{background:var(--acc-s);color:var(--acc);border-color:transparent}
+.sb-divider{height:1px;background:var(--border);margin:8px 0}
+.progress-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:14px;margin-top:4px}
+.prog-label{font-size:11px;color:var(--tx3);font-weight:600;letter-spacing:0.5px;margin-bottom:10px}
+.prog-bar{height:5px;background:var(--surface2);border-radius:99px;overflow:hidden;margin-bottom:8px}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--acc),var(--acc2));border-radius:99px;transition:width 0.6s ease}
+.prog-stats{display:flex;justify-content:space-between;font-size:11px;color:var(--tx2)}
 
-        .controls {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-bottom: 30px;
-        }
+/* ── SECTION ── */
+.cat-section{margin-bottom:1.5rem}
+.sec-header{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg) var(--r-lg) 0 0;cursor:pointer;user-select:none;transition:background var(--tr)}
+.sec-header:hover{background:var(--surface2)}
+.sec-header.collapsed{border-radius:var(--r-lg)}
+.sec-title-row{display:flex;align-items:center;gap:10px}
+.sec-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;font-family:var(--ff-mono);flex-shrink:0}
+.sec-name{font-family:var(--ff-head);font-size:1rem;font-weight:500;color:var(--tx1)}
+.sec-count{font-size:11px;color:var(--tx3);margin-top:1px}
+.sec-arrow{font-size:11px;color:var(--tx3);transition:transform var(--tr)}
+.sec-header.collapsed .sec-arrow{transform:rotate(-90deg)}
+.cards-grid{border:1px solid var(--border);border-top:none;border-radius:0 0 var(--r-lg) var(--r-lg);overflow:hidden}
 
-        button {
-            padding: 12px 24px;
-            border: none;
-            border-radius: 12px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            font-size: 16px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
+/* ── FORMULA CARD ── */
+.fcard{display:grid;grid-template-columns:1fr auto;align-items:center;gap:10px;padding:13px 16px;background:var(--surface);border-bottom:1px solid var(--border);transition:background var(--tr);cursor:pointer}
+.fcard:last-child{border-bottom:none}
+.fcard:hover{background:var(--surface2)}
+.fcard.learned{border-left:3px solid var(--grn)}
+.fcard-formula{font-size:15px;line-height:1.5;color:var(--tx1);margin-bottom:2px;overflow-x:auto;scrollbar-width:none}
+.fcard-formula::-webkit-scrollbar{display:none}
+.fcard-desc{font-size:12px;color:var(--tx2)}
+.fcard-actions{display:flex;align-items:center;gap:4px;flex-shrink:0}
+.act{width:28px;height:28px;border-radius:7px;border:1px solid var(--border);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--tx3);transition:all var(--tr)}
+.act:hover{background:var(--surface2);color:var(--tx1);border-color:var(--border-s)}
+.act.bm.on{color:var(--amber);border-color:var(--amber);background:var(--amber-s)}
+.act.lrn.on{color:var(--grn);border-color:var(--grn);background:var(--grn-s)}
 
-        .mode-btn {
-            background: linear-gradient(45deg, #22c55e, #16a34a);
-            color: white;
-            box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3);
-        }
+/* grid view */
+.cards-grid.gv{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:8px;border:none;background:transparent}
+.cards-grid.gv .fcard{border:1px solid var(--border);border-radius:var(--r-lg);grid-template-columns:1fr;align-items:flex-start}
+.cards-grid.gv .fcard:last-child{border-bottom:1px solid var(--border)}
+.cards-grid.gv .fcard-actions{align-self:flex-end}
 
-        .mode-btn.active {
-            transform: scale(1.05);
-            box-shadow: 0 6px 20px rgba(34, 197, 94, 0.5);
-        }
+/* ── QUIZ SECTION ── */
+#view-quiz{display:none;padding:0}
+.quiz-shell{display:grid;grid-template-columns:1fr 300px;gap:1.5rem;align-items:start}
+@media(max-width:780px){.quiz-shell{grid-template-columns:1fr}}
+.quiz-main{}
+.quiz-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-xl);padding:2.5rem 2rem;text-align:center;min-height:220px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;position:relative;transition:all var(--tr)}
+.quiz-cat-chip{font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--tx3);border:1px solid var(--border);border-radius:99px;padding:3px 10px}
+.quiz-formula{font-size:22px;line-height:1.5;color:var(--tx1);margin:8px 0}
+.quiz-hint{font-size:14px;color:var(--tx2);margin-top:4px;display:none}
+.quiz-btns{display:flex;gap:8px;justify-content:center;margin-top:1rem;flex-wrap:wrap}
+.qbtn{padding:9px 20px;border-radius:var(--r);font-family:var(--ff-body);font-size:13px;font-weight:600;cursor:pointer;border:1px solid;transition:all var(--tr)}
+.qbtn-reveal{background:var(--acc-s);color:var(--acc);border-color:rgba(124,106,247,0.3)}
+.qbtn-reveal:hover{background:var(--acc-g)}
+.qbtn-next{background:var(--teal-s);color:var(--teal);border-color:rgba(61,191,176,0.3)}
+.qbtn-next:hover{background:rgba(61,191,176,0.18)}
+.quiz-mc{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:1.25rem}
+.mc-opt{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r-lg);padding:12px 14px;font-size:13px;color:var(--tx1);cursor:pointer;transition:all var(--tr);text-align:left}
+.mc-opt:hover{border-color:var(--acc);background:var(--acc-s)}
+.mc-opt.correct{background:var(--grn-s);border-color:var(--grn);color:var(--grn);pointer-events:none}
+.mc-opt.wrong{background:var(--rose-s);border-color:var(--rose);color:var(--rose);pointer-events:none}
+.quiz-sidebar-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-xl);padding:1.5rem;display:flex;flex-direction:column;gap:14px;position:sticky;top:100px}
+.quiz-mode-toggle{display:flex;gap:6px}
+.qtog{flex:1;padding:8px;border-radius:var(--r);border:1px solid var(--border);background:transparent;font-family:var(--ff-body);font-size:12px;font-weight:600;color:var(--tx2);cursor:pointer;transition:all var(--tr)}
+.qtog.active{background:var(--acc-s);color:var(--acc);border-color:rgba(124,106,247,0.3)}
+.stat-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border)}
+.stat-row:last-child{border-bottom:none}
+.stat-label{font-size:12px;color:var(--tx2)}
+.stat-val{font-size:20px;font-weight:600;color:var(--tx1);font-family:var(--ff-head)}
+.stat-val.green{color:var(--grn)}
+.stat-val.amber{color:var(--amber)}
+.filter-chips{display:flex;flex-wrap:wrap;gap:5px}
+.chip{padding:4px 10px;border-radius:99px;font-size:11px;font-weight:600;background:var(--surface2);border:1px solid var(--border);color:var(--tx2);cursor:pointer;transition:all var(--tr)}
+.chip:hover{border-color:var(--border-s);color:var(--tx1)}
+.chip.active{background:var(--acc-s);color:var(--acc);border-color:transparent}
+.streak-banner{display:none;align-items:center;gap:8px;background:var(--amber-s);border:1px solid rgba(240,168,48,0.25);border-radius:var(--r);padding:8px 12px;font-size:12px;color:var(--amber);font-weight:600}
+.streak-banner.show{display:flex}
 
-        .quiz-btn {
-            background: linear-gradient(45deg, #3b82f6, #1d4ed8);
-            color: white;
-            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
-        }
+/* ── FLASHCARD ── */
+#view-flash{display:none;padding:0}
+.flash-shell{display:grid;grid-template-columns:1fr 260px;gap:1.5rem;align-items:start}
+@media(max-width:780px){.flash-shell{grid-template-columns:1fr}}
+.fc-wrap{perspective:1200px}
+.fc-inner{width:100%;min-height:260px;position:relative;transform-style:preserve-3d;transition:transform 0.5s cubic-bezier(0.4,0,0.2,1);cursor:pointer}
+.fc-inner.flipped{transform:rotateY(180deg)}
+.fc-face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-xl);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2.5rem 2rem;gap:10px;text-align:center}
+.fc-face-back{transform:rotateY(180deg);background:var(--surface2)}
+.fc-tag{font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--tx3)}
+.fc-formula{font-size:22px;line-height:1.5;color:var(--tx1)}
+.fc-desc{font-size:16px;color:var(--tx1);font-weight:500}
+.fc-cat{font-size:12px;color:var(--tx2)}
+.fc-hint{font-size:12px;color:var(--tx3);margin-top:8px;border-top:1px solid var(--border);padding-top:10px;width:100%}
+.flash-nav{display:flex;gap:8px;margin-top:12px;justify-content:center}
+.fnav{padding:9px 20px;border-radius:var(--r);font-family:var(--ff-body);font-size:13px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:var(--surface);color:var(--tx2);transition:all var(--tr)}
+.fnav:hover{background:var(--surface2);color:var(--tx1);border-color:var(--border-s)}
+.fnav.primary{background:var(--acc);border-color:var(--acc);color:#fff}
+.fnav.primary:hover{filter:brightness(1.1)}
+.flash-sidebar-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-xl);padding:1.5rem;display:flex;flex-direction:column;gap:12px;position:sticky;top:100px}
+.flash-prog-ring{display:flex;justify-content:center;padding:8px 0}
+.flash-stats{display:flex;justify-content:space-around;text-align:center;padding:10px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.fstat-n{font-size:22px;font-weight:600;color:var(--acc);font-family:var(--ff-head)}
+.fstat-l{font-size:11px;color:var(--tx2)}
+.fc-counter{text-align:center;font-size:12px;color:var(--tx3);margin-top:4px}
 
-        button:hover {
-            transform: translateY(-2px);
-        }
-        button:active {
-            transform: translateY(0);
-        }
+/* ── MODAL ── */
+.modal-bg{position:fixed;inset:0;z-index:90;background:rgba(0,0,0,0.65);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;padding:1rem}
+.modal-bg.open{display:flex}
+.modal{background:var(--surface);border:1px solid var(--border-s);border-radius:var(--r-xl);max-width:580px;width:100%;box-shadow:var(--shadow);animation:mIn 0.18s ease}
+@keyframes mIn{from{transform:scale(0.95);opacity:0}to{transform:scale(1);opacity:1}}
+.modal-head{display:flex;align-items:center;justify-content:space-between;padding:1.25rem 1.5rem;border-bottom:1px solid var(--border)}
+.modal-title{font-family:var(--ff-head);font-size:1.1rem;color:var(--tx1)}
+.modal-body{padding:1.5rem}
+.modal-formula-box{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r-lg);padding:1.75rem;text-align:center;font-size:22px;margin-bottom:1rem;overflow-x:auto}
+.modal-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1rem}
+.minfo{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);padding:10px 12px}
+.minfo-k{font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--tx3);margin-bottom:4px}
+.minfo-v{font-size:13px;color:var(--tx1);font-weight:500}
+.modal-latex-box{background:var(--bg);border:1px solid var(--border);border-radius:var(--r);padding:10px 14px;font-family:var(--ff-mono);font-size:12px;color:var(--acc);word-break:break-all}
+.modal-footer{display:flex;gap:7px;margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border);flex-wrap:wrap}
+.mbtn{flex:1;min-width:90px;padding:9px 10px;border-radius:var(--r);font-family:var(--ff-body);font-size:12px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:var(--surface2);color:var(--tx1);transition:all var(--tr)}
+.mbtn:hover{background:var(--border-s)}
+.mbtn.primary{background:var(--acc);color:#fff;border-color:var(--acc)}
+.mbtn.primary:hover{filter:brightness(1.1)}
 
-        .card {
-            background: linear-gradient(145deg, #1e293b, #334155);
-            padding: 40px 30px;
-            border-radius: 20px;
-            margin: 20px 0;
-            cursor: pointer;
-            transition: all 0.4s ease;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            position: relative;
-            min-height: 150px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.3em;
-         cursor: default; }
-.card.flash { cursor: pointer; }
+/* ── BOOKMARKS PANEL ── */
+.bm-panel{position:fixed;right:0;top:0;bottom:0;z-index:80;width:320px;background:var(--bg2);border-left:1px solid var(--border);transform:translateX(100%);transition:transform 0.25s cubic-bezier(0.4,0,0.2,1);display:flex;flex-direction:column}
+.bm-panel.open{transform:translateX(0)}
+.bm-head{display:flex;align-items:center;justify-content:space-between;padding:1.25rem;border-bottom:1px solid var(--border)}
+.bm-title{font-family:var(--ff-head);font-size:1rem;color:var(--tx1)}
+.bm-body{flex:1;overflow-y:auto;padding:1rem}
+.bm-item{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:10px 12px;margin-bottom:8px;cursor:pointer;transition:border-color var(--tr)}
+.bm-item:hover{border-color:var(--acc)}
+.bm-item-formula{font-size:13px;color:var(--tx1);margin-bottom:2px;overflow-x:auto;scrollbar-width:none}
+.bm-item-formula::-webkit-scrollbar{display:none}
+.bm-item-meta{font-size:11px;color:var(--tx3)}
+.bm-empty{text-align:center;padding:2.5rem 1rem;color:var(--tx3);font-size:13px;line-height:1.8}
 
-        .card:hover {
-            transform: translateY(-5px) scale(1.02);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-        }
+/* ── TOAST ── */
+.toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(16px);z-index:99;background:var(--surface2);border:1px solid var(--border-s);border-radius:var(--r);padding:9px 18px;font-size:13px;color:var(--tx1);opacity:0;transition:all 0.2s;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
-        .card.flipped {
-            background: linear-gradient(145deg, #059669, #047857);
-        }
+/* ── CONTENT HEAD ── */
+.content-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;gap:10px;flex-wrap:wrap}
+.view-toggle{display:flex;gap:4px}
+.vbtn{width:30px;height:30px;border-radius:var(--r);background:var(--surface);border:1px solid var(--border);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--tx3);transition:all var(--tr)}
+.vbtn.active,.vbtn:hover{background:var(--acc-s);border-color:var(--acc);color:var(--acc)}
+.results-head{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.score-badge{background:var(--grn-s);color:var(--grn);border:1px solid rgba(78,203,132,0.3);border-radius:var(--r);padding:6px 14px;font-size:13px;font-weight:600}
 
-        .stats {
-            display: flex;
-            justify-content: space-between;
-            background: rgba(30, 41, 59, 0.8);
-            padding: 15px;
-            border-radius: 15px;
-            margin: 20px 0;
-            backdrop-filter: blur(10px);
-        }
+/* ── COLOR CLASSES ── */
+.ic-alg{background:rgba(124,106,247,0.12);color:var(--acc)}
+.ic-seq{background:rgba(240,168,48,0.12);color:var(--amber)}
+.ic-trig{background:rgba(61,191,176,0.12);color:var(--teal)}
+.ic-log{background:rgba(168,130,250,0.12);color:#a882fa}
+.ic-geo{background:rgba(78,203,132,0.12);color:var(--grn)}
+.ic-exp{background:rgba(240,96,112,0.12);color:var(--rose)}
+.ic-frac{background:rgba(240,168,48,0.1);color:#e8a030}
+.ic-root{background:rgba(61,191,176,0.1);color:var(--teal)}
+.ic-prob{background:rgba(80,140,240,0.12);color:#6090f5}
+.ic-calc{background:rgba(240,96,112,0.12);color:var(--rose)}
+.ic-stat{background:rgba(168,130,250,0.1);color:#b89cff}
+.ic-cplx{background:rgba(78,203,132,0.1);color:var(--grn)}
 
-        .stat {
-            text-align: center;
-        }
+/* ── EMPTY ── */
+.empty-state{text-align:center;padding:4rem 2rem;color:var(--tx3)}
+.empty-state h3{font-family:var(--ff-head);font-size:1.5rem;color:var(--tx2);margin-bottom:0.5rem}
+.empty-state p{font-size:13px}
 
-        .stat-number {
-            font-size: 2em;
-            font-weight: bold;
-            color: #22c55e;
-        }
-
-        .options-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-top: 20px;
-        }
-
-        .option {
-            background: linear-gradient(145deg, #334155, #475569);
-            color: white;
-            padding: 15px;
-            border-radius: 12px;
-            font-size: 1.1em;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            border: 2px solid transparent;
-        }
-
-        .option:hover {
-            background: linear-gradient(145deg, #475569, #64748b);
-            transform: translateY(-2px);
-        }
-
-        .correct {
-            background: linear-gradient(145deg, #22c55e, #16a34a) !important;
-            animation: pulse 0.6s ease;
-        }
-
-        .wrong {
-            background: linear-gradient(145deg, #ef4444, #dc2626) !important;
-            animation: shake 0.5s ease;
-        }
-
-        @keyframes pulse {
-            0% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.05);
-            }
-            100% {
-                transform: scale(1);
-            }
-        }
-
-        @keyframes shake {
-            0%, 100% {
-                transform: translateX(0);
-            }
-            25% {
-                transform: translateX(-5px);
-            }
-            75% {
-                transform: translateX(5px);
-            }
-        }
-
-        .progress-bar {
-            width: 100%;
-            height: 8px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 4px;
-            overflow: hidden;
-            margin: 20px 0;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #22c55e, #3b82f6);
-            width: 0%;
-            transition: width 0.3s ease;
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.8);
-            z-index: 1000;
-            backdrop-filter: blur(5px);
-        }
-
-        .modal-content {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: linear-gradient(145deg, #1e293b, #334155);
-            padding: 40px;
-            border-radius: 20px;
-            max-width: 500px;
-            text-align: center;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-        }
-    </style>
+/* Quiz result state */
+.quiz-result-overlay{position:absolute;inset:0;background:var(--surface);border-radius:var(--r-xl);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;opacity:0;pointer-events:none;transition:opacity 0.25s}
+.quiz-result-overlay.show{opacity:1;pointer-events:auto}
+.qres-icon{font-size:40px}
+.qres-msg{font-size:16px;font-weight:600}
+.qres-desc{font-size:13px;color:var(--tx2)}
+</style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1><i class="fas fa-calculator"></i> Math Flashcards</h1>
-        </div>
 
-        <div class="controls">
-            <button class="mode-btn" id="flashBtn" onclick="setMode('flash')">
-                <i class="fas fa-cards"></i> Flashcards
-            </button>
-            <button class="quiz-btn" id="quizBtn" onclick="setMode('quiz')">
-                <i class="fas fa-question-circle"></i> Quiz
-            </button>
-            <button onclick="showResults()" style="background: linear-gradient(45deg, #f59e0b, #d97706);">
-                <i class="fas fa-chart-bar"></i> Results
-            </button>
-            <button onclick="window.location.href = 'https://whois65.github.io/projects/math-learning.html'" style="background: linear-gradient(45deg, #95fe0b, #79d706);">
-                <i class="fas fa-book"></i> Learn
-            </button>
-        </div>
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-logo">
+    <div class="logo-mark">M</div>
+    MathRef
+  </div>
+  <div class="search-box">
+    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <input type="text" id="search-input" placeholder="Search formulas, topics…" oninput="onSearch()">
+  </div>
+  <div class="nav-right">
+    <button class="nav-btn active" id="tab-library" onclick="switchView('library')">
+      <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      Library
+    </button>
+    <button class="nav-btn" id="tab-flash" onclick="switchView('flash')">
+      <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M12 4v16"/></svg>
+      Flashcards
+    </button>
+    <button class="nav-btn" id="tab-quiz" onclick="switchView('quiz')">
+      <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17" stroke-linecap="round" stroke-width="2.5"/></svg>
+      Quiz
+    </button>
+    <button class="nav-btn" id="bm-toggle-btn" onclick="toggleBmPanel()">
+      <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+      Saved
+      <span class="fav-dot" id="fav-dot">0</span>
+    </button>
+    <button class="nav-btn" onclick="toggleTheme()" id="theme-btn">
+      <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" id="theme-icon-sun"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+    </button>
+  </div>
+</nav>
 
-        <div class="stats">
-            <div class="stat">
-                <div class="stat-number" id="totalCards">
-                    0
-                </div>
-                <div>
-                    Total Cards
-                </div>
-            </div>
-            <div class="stat">
-                <div class="stat-number" id="score">
-                    0
-                </div>
-                <div>
-                    Score
-                </div>
-            </div>
-            <div class="stat">
-                <div class="stat-number" id="accuracy">
-                    0%
-                </div>
-                <div>
-                    Accuracy
-                </div>
-            </div>
+<!-- LIBRARY VIEW -->
+<div id="view-library">
+  <div class="app-body">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="lib-sidebar">
+      <div class="sb-label">Categories</div>
+      <a class="sb-link active" data-cat="all" onclick="filterCat('all',this)">All formulas <span class="sb-badge" id="badge-all">0</span></a>
+      <div id="sb-cats"></div>
+      <div class="sb-divider"></div>
+      <div class="progress-card">
+        <div class="prog-label">📚 LEARNED</div>
+        <div class="prog-bar"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+        <div class="prog-stats"><span id="prog-text">0 / 0</span><span id="prog-pct">0%</span></div>
+      </div>
+    </aside>
+    <!-- Content -->
+    <div>
+      <div class="content-head">
+        <div style="font-size:13px;color:var(--tx2)" id="results-label"></div>
+        <div class="view-toggle">
+          <button class="vbtn active" id="v-list" onclick="setView('list')" title="List view">☰</button>
+          <button class="vbtn" id="v-grid" onclick="setView('grid')" title="Grid view">⊞</button>
         </div>
-
-        <div class="progress-bar">
-            <div class="progress-fill" id="progressFill"></div>
-        </div>
-
-        <div id="card" class="card" onclick="flipCard()"></div>
-        <div id="quizOptions" class="options-grid"></div>
-
-        <div class="controls" style="justify-content: center; margin-top: 30px;">
-            <button onclick="previousCard()" style="background: #64748b;">
-                <i class="fas fa-arrow-left"></i> Previous
-            </button>
-            <button onclick="nextCard()" class="mode-btn">
-                <i class="fas fa-arrow-right"></i> Next
-            </button>
-            <button onclick="resetStats()" style="background: #ef4444;">
-                <i class="fas fa-redo"></i> Reset
-            </button>
-        </div>
+      </div>
+      <div id="lib-content"></div>
     </div>
+  </div>
+</div>
 
-    <div id="resultsModal" class="modal">
-        <div class="modal-content">
-            <h2><i class="fas fa-trophy"></i> Quiz Results</h2>
-            <div id="resultsContent"></div>
-            <button onclick="closeResults()" class="mode-btn" style="margin-top: 20px; width: 100%;">
-                <i class="fas fa-play"></i> Play Again
-            </button>
+<!-- QUIZ VIEW -->
+<div id="view-quiz" style="padding:1.5rem;max-width:1140px;margin:0 auto">
+  <div class="quiz-shell">
+    <div>
+      <div class="streak-banner" id="streak-banner">🔥 <span id="streak-text">3 in a row!</span></div>
+      <div style="height:8px"></div>
+      <div class="quiz-card" id="quiz-card">
+        <div class="quiz-result-overlay" id="quiz-result-overlay">
+          <div class="qres-icon" id="qres-icon"></div>
+          <div class="qres-msg" id="qres-msg"></div>
+          <div class="qres-desc" id="qres-desc"></div>
         </div>
+        <div class="quiz-cat-chip" id="quiz-cat"></div>
+        <div class="quiz-formula" id="quiz-formula"></div>
+        <div class="quiz-hint" id="quiz-hint"></div>
+      </div>
+      <div id="quiz-mc-area" class="quiz-mc"></div>
+      <div class="quiz-btns" id="quiz-btns">
+        <button class="qbtn qbtn-reveal" id="quiz-reveal-btn" onclick="quizReveal()">Reveal answer</button>
+        <button class="qbtn qbtn-next" onclick="quizNext()">Next →</button>
+      </div>
     </div>
+    <div class="quiz-sidebar-card">
+      <div style="font-size:12px;font-weight:600;color:var(--tx3);letter-spacing:1px;text-transform:uppercase">Mode</div>
+      <div class="quiz-mode-toggle">
+        <button class="qtog active" id="qm-identify" onclick="setQuizMode('identify',this)">Identify</button>
+        <button class="qtog" id="qm-multiple" onclick="setQuizMode('multiple',this)">4-choice</button>
+      </div>
+      <div style="font-size:12px;font-weight:600;color:var(--tx3);letter-spacing:1px;text-transform:uppercase">Filter</div>
+      <div class="filter-chips" id="quiz-filter-chips"></div>
+      <div class="sb-divider"></div>
+      <div class="stat-row"><span class="stat-label">Score</span><span class="stat-val" id="qs-score">0</span></div>
+      <div class="stat-row"><span class="stat-label">Correct</span><span class="stat-val green" id="qs-correct">0</span></div>
+      <div class="stat-row"><span class="stat-label">Accuracy</span><span class="stat-val amber" id="qs-acc">—</span></div>
+      <div class="stat-row"><span class="stat-label">Best streak</span><span class="stat-val" id="qs-streak">0</span></div>
+      <button class="qbtn" style="width:100%;background:var(--rose-s);color:var(--rose);border-color:rgba(240,96,112,0.3)" onclick="resetQuizStats()">Reset stats</button>
+    </div>
+  </div>
+</div>
 
-    <script>
-let rawData = {};
-let cards = [];
-let current = 0;
-let flipped = false;
-let mode = 'flash';
-let usedIndexes = [];
+<!-- FLASHCARD VIEW -->
+<div id="view-flash" style="padding:1.5rem;max-width:1140px;margin:0 auto">
+  <div class="flash-shell">
+    <div>
+      <div class="fc-wrap" onclick="flipCard()">
+        <div class="fc-inner" id="fc-inner">
+          <div class="fc-face" id="fc-front">
+            <div class="fc-tag">Formula</div>
+            <div class="fc-formula" id="fc-formula"></div>
+            <div class="fc-cat" id="fc-cat-front"></div>
+            <div class="fc-hint">Click to reveal</div>
+          </div>
+          <div class="fc-face fc-face-back" id="fc-back">
+            <div class="fc-tag">Answer</div>
+            <div class="fc-desc" id="fc-desc"></div>
+            <div class="fc-cat" id="fc-cat-back"></div>
+          </div>
+        </div>
+      </div>
+      <div class="fc-counter" id="fc-counter">Card 1 of 100</div>
+      <div class="flash-nav">
+        <button class="fnav" onclick="flashPrev()">← Prev</button>
+        <button class="fnav" onclick="flashMark()" id="flash-mark-btn">Mark learned</button>
+        <button class="fnav primary" onclick="flashNext()">Next →</button>
+      </div>
+    </div>
+    <div class="flash-sidebar-card">
+      <div style="font-size:12px;font-weight:600;color:var(--tx3);letter-spacing:1px;text-transform:uppercase">Filter category</div>
+      <div class="filter-chips" id="flash-filter-chips"></div>
+      <div class="sb-divider"></div>
+      <div class="flash-stats">
+        <div><div class="fstat-n" id="fs-total">0</div><div class="fstat-l">Total</div></div>
+        <div><div class="fstat-n" id="fs-learned">0</div><div class="fstat-l">Learned</div></div>
+        <div><div class="fstat-n" id="fs-pct">0%</div><div class="fstat-l">Done</div></div>
+      </div>
+      <div style="font-size:12px;font-weight:600;color:var(--tx3);letter-spacing:1px;text-transform:uppercase;margin-top:4px">Options</div>
+      <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--tx2);cursor:pointer">
+        <input type="checkbox" id="flash-shuffle" onchange="flashShuffle()" style="accent-color:var(--acc)"> Shuffle cards
+      </label>
+      <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--tx2);cursor:pointer">
+        <input type="checkbox" id="flash-unlearned" onchange="flashFilterUnlearned()" style="accent-color:var(--acc)"> Unlearned only
+      </label>
+    </div>
+  </div>
+</div>
 
-let stats = JSON.parse(localStorage.getItem("mathStats")) || {
-    total: 0,
-    correct: 0,
-    wrong: 0,
-    streak: 0,
-    bestStreak: 0,
-    categories: {}
+<!-- MODAL -->
+<div class="modal-bg" id="modal-bg" onclick="closeModal(event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-head">
+      <div class="modal-title" id="modal-title">Formula Details</div>
+      <button class="act" onclick="closeModalDirect()" style="border:none;background:transparent;font-size:14px;color:var(--tx2);cursor:pointer">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-formula-box" id="modal-formula"></div>
+      <div class="modal-grid" id="modal-meta"></div>
+      <div class="minfo-k" style="margin-bottom:6px">LaTeX source</div>
+      <div class="modal-latex-box" id="modal-latex"></div>
+      <div class="modal-footer">
+        <button class="mbtn" onclick="copyModalLatex()">📋 Copy LaTeX</button>
+        <button class="mbtn" id="modal-bm-btn" onclick="toggleBmFromModal()">🔖 Bookmark</button>
+        <button class="mbtn" id="modal-lrn-btn" onclick="toggleLrnFromModal()">✓ Mark learned</button>
+        <button class="mbtn primary" onclick="closeModalDirect()">Done</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- BOOKMARKS PANEL -->
+<div class="bm-panel" id="bm-panel">
+  <div class="bm-head">
+    <div class="bm-title">🔖 Saved formulas</div>
+    <button class="act" onclick="toggleBmPanel()" style="border:none;background:transparent;font-size:14px;color:var(--tx2);cursor:pointer">✕</button>
+  </div>
+  <div class="bm-body" id="bm-body"></div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+/* ══════════ DATA ══════════ */
+const DATA = {
+  "Algebra":{icon:"α",ic:"ic-alg",formulas:[
+    ["x=\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}","Quadratic formula"],
+    ["D=b^2-4ac","Discriminant"],
+    ["(a+b)^2=a^2+2ab+b^2","Binomial square (sum)"],
+    ["(a-b)^2=a^2-2ab+b^2","Binomial square (diff)"],
+    ["a^2-b^2=(a-b)(a+b)","Difference of squares"],
+    ["(a+b)^3=a^3+3a^2b+3ab^2+b^3","Binomial cube (sum)"],
+    ["(a-b)^3=a^3-3a^2b+3ab^2-b^3","Binomial cube (diff)"],
+    ["\\sum_{i=1}^n i=\\frac{n(n+1)}{2}","Sum of first n integers"],
+    ["\\sum_{i=1}^n i^2=\\frac{n(n+1)(2n+1)}{6}","Sum of squares"],
+  ]},
+  "Sequences":{icon:"∑",ic:"ic-seq",formulas:[
+    ["a_n=a_1+(n-1)d","Arithmetic nth term"],
+    ["S_n=\\frac{n}{2}(a_1+a_n)","Arithmetic series sum"],
+    ["S_n=\\frac{n}{2}(2a_1+(n-1)d)","Arithmetic sum (expanded)"],
+    ["a_n=a_1r^{n-1}","Geometric nth term"],
+    ["S_n=a_1\\frac{1-r^n}{1-r}","Geometric series sum"],
+    ["S_\\infty=\\frac{a_1}{1-r}","Infinite geometric series"],
+  ]},
+  "Trigonometry":{icon:"θ",ic:"ic-trig",formulas:[
+    ["\\sin^2x+\\cos^2x=1","Pythagorean identity"],
+    ["1+\\tan^2x=\\sec^2x","Pythagorean identity (tan)"],
+    ["1+\\cot^2x=\\csc^2x","Pythagorean identity (cot)"],
+    ["\\tan x=\\frac{\\sin x}{\\cos x}","Tangent definition"],
+    ["\\sin(A+B)=\\sin A\\cos B+\\cos A\\sin B","Sine addition"],
+    ["\\cos(A+B)=\\cos A\\cos B-\\sin A\\sin B","Cosine addition"],
+    ["\\tan(A+B)=\\frac{\\tan A+\\tan B}{1-\\tan A\\tan B}","Tangent addition"],
+    ["\\sin 2x=2\\sin x\\cos x","Double angle sine"],
+    ["\\cos 2x=\\cos^2x-\\sin^2x","Double angle cosine"],
+    ["\\sin(-x)=-\\sin x","Sine odd function"],
+    ["\\cos(-x)=\\cos x","Cosine even function"],
+  ]},
+  "Logarithm":{icon:"㏒",ic:"ic-log",formulas:[
+    ["\\log_a(xy)=\\log_ax+\\log_ay","Log product rule"],
+    ["\\log_a\\!\\left(\\tfrac{x}{y}\\right)=\\log_ax-\\log_ay","Log quotient rule"],
+    ["\\log_a(x^k)=k\\log_ax","Log power rule"],
+    ["\\log_ax=\\frac{\\ln x}{\\ln a}","Change of base"],
+    ["\\log_aa=1","Log of its base"],
+    ["\\log_a1=0","Log of 1"],
+    ["a^{\\log_ab}=b","Inverse: exp undoes log"],
+    ["\\ln e=1","Natural log of e"],
+    ["\\ln e^x=x","Natural log inverse"],
+  ]},
+  "Geometry":{icon:"△",ic:"ic-geo",formulas:[
+    ["P=2(l+w)","Perimeter of rectangle"],
+    ["A=lw","Area of rectangle"],
+    ["C=2\\pi r","Circumference of circle"],
+    ["A=\\pi r^2","Area of circle"],
+    ["A=\\tfrac{1}{2}bh","Area of triangle"],
+    ["A=\\tfrac{1}{2}(a+b)h","Area of trapezoid"],
+    ["c^2=a^2+b^2","Pythagorean theorem"],
+    ["d=\\sqrt{(x_2-x_1)^2+(y_2-y_1)^2}","Distance formula"],
+    ["m=\\frac{y_2-y_1}{x_2-x_1}","Slope formula"],
+    ["V=\\pi r^2h","Volume of cylinder"],
+    ["V=\\tfrac{4}{3}\\pi r^3","Volume of sphere"],
+    ["V=\\tfrac{1}{3}\\pi r^2h","Volume of cone"],
+    ["SA=4\\pi r^2","Surface area of sphere"],
+  ]},
+  "Exponents":{icon:"xⁿ",ic:"ic-exp",formulas:[
+    ["a^m\\cdot a^n=a^{m+n}","Product of powers"],
+    ["\\frac{a^m}{a^n}=a^{m-n}","Quotient of powers"],
+    ["(a^m)^n=a^{mn}","Power of a power"],
+    ["(ab)^n=a^nb^n","Power of a product"],
+    ["a^{-n}=\\frac{1}{a^n}","Negative exponent"],
+    ["a^{1/n}=\\sqrt[n]{a}","Fractional exponent (root)"],
+    ["a^{m/n}=\\sqrt[n]{a^m}","Fractional exponent"],
+    ["a^0=1","Zero exponent"],
+  ]},
+  "Fractions":{icon:"½",ic:"ic-frac",formulas:[
+    ["\\frac{a}{b}+\\frac{c}{d}=\\frac{ad+bc}{bd}","Fraction addition"],
+    ["\\frac{a}{b}-\\frac{c}{d}=\\frac{ad-bc}{bd}","Fraction subtraction"],
+    ["\\frac{a}{b}\\times\\frac{c}{d}=\\frac{ac}{bd}","Fraction multiplication"],
+    ["\\frac{a}{b}\\div\\frac{c}{d}=\\frac{ad}{bc}","Fraction division"],
+    ["a\\frac{b}{c}=\\frac{ac+b}{c}","Mixed to improper fraction"],
+  ]},
+  "Radicals":{icon:"√",ic:"ic-root",formulas:[
+    ["m\\sqrt{a}+n\\sqrt{a}=(m+n)\\sqrt{a}","Addition of radicals"],
+    ["m\\sqrt{a}-n\\sqrt{a}=(m-n)\\sqrt{a}","Subtraction of radicals"],
+    ["\\sqrt{a}\\cdot\\sqrt{b}=\\sqrt{ab}","Multiplication of radicals"],
+    ["\\frac{\\sqrt{a}}{\\sqrt{b}}=\\sqrt{\\frac{a}{b}}","Division of radicals"],
+    ["(\\sqrt{a})^2=a","Square of a radical"],
+    ["\\sqrt[n]{a^m}=a^{m/n}","Radical to exponent"],
+  ]},
+  "Probability":{icon:"℗",ic:"ic-prob",formulas:[
+    ["P(A)=\\frac{\\text{favourable}}{\\text{total}}","Basic probability"],
+    ["P(A\\cup B)=P(A)+P(B)-P(A\\cap B)","Union of events"],
+    ["P(A\\cap B)=P(A)\\cdot P(B)","Independent events"],
+    ["P(A|B)=\\frac{P(A\\cap B)}{P(B)}","Conditional probability"],
+    ["\\binom{n}{k}=\\frac{n!}{k!(n-k)!}","Combinations"],
+    ["P(n,k)=\\frac{n!}{(n-k)!}","Permutations"],
+  ]},
+  "Statistics":{icon:"σ",ic:"ic-stat",formulas:[
+    ["\\mu=\\frac{\\sum x}{n}","Mean (population)"],
+    ["\\bar{x}=\\frac{\\sum x}{n}","Mean (sample)"],
+    ["\\sigma^2=\\frac{\\sum(x-\\mu)^2}{n}","Variance (population)"],
+    ["s^2=\\frac{\\sum(x-\\bar{x})^2}{n-1}","Variance (sample)"],
+    ["\\sigma=\\sqrt{\\frac{\\sum(x-\\mu)^2}{n}}","Standard deviation"],
+    ["z=\\frac{x-\\mu}{\\sigma}","Z-score"],
+    ["\\rho=\\frac{\\sum(x-\\bar{x})(y-\\bar{y})}{\\sqrt{\\sum(x-\\bar{x})^2\\sum(y-\\bar{y})^2}}","Pearson correlation"],
+    ["\\text{IQR}=Q_3-Q_1","Interquartile range"],
+  ]},
+  "Calculus":{icon:"∫",ic:"ic-calc",formulas:[
+    ["\\frac{d}{dx}(x^n)=nx^{n-1}","Power rule"],
+    ["\\frac{d}{dx}(\\sin x)=\\cos x","Derivative of sin"],
+    ["\\frac{d}{dx}(\\cos x)=-\\sin x","Derivative of cos"],
+    ["\\frac{d}{dx}(e^x)=e^x","Derivative of e^x"],
+    ["\\frac{d}{dx}(\\ln x)=\\frac{1}{x}","Derivative of ln"],
+    ["(fg)'=f'g+fg'","Product rule"],
+    ["\\left(\\frac{f}{g}\\right)'=\\frac{f'g-fg'}{g^2}","Quotient rule"],
+    ["\\frac{d}{dx}[f(g(x))]=f'(g(x))\\cdot g'(x)","Chain rule"],
+    ["\\int x^n\\,dx=\\frac{x^{n+1}}{n+1}+C","Power integral"],
+    ["\\int e^x\\,dx=e^x+C","Integral of e^x"],
+    ["\\int\\frac{1}{x}\\,dx=\\ln|x|+C","Log integral"],
+    ["\\int\\sin x\\,dx=-\\cos x+C","Integral of sin"],
+    ["\\int\\cos x\\,dx=\\sin x+C","Integral of cos"],
+    ["\\int_a^b f(x)\\,dx=F(b)-F(a)","Fundamental theorem"],
+    ["\\lim_{x\\to 0}\\frac{\\sin x}{x}=1","Sinc limit"],
+  ]},
+  "Complex Numbers":{icon:"ℂ",ic:"ic-cplx",formulas:[
+    ["i^2=-1","Imaginary unit"],
+    ["|z|=\\sqrt{a^2+b^2}","Modulus"],
+    ["\\bar{z}=a-bi","Complex conjugate"],
+    ["z=r(\\cos\\theta+i\\sin\\theta)","Polar form"],
+    ["e^{i\\theta}=\\cos\\theta+i\\sin\\theta","Euler's formula"],
+    ["e^{i\\pi}+1=0","Euler's identity"],
+    ["z^n=r^n(\\cos n\\theta+i\\sin n\\theta)","De Moivre's theorem"],
+    ["\\frac{1}{a+bi}=\\frac{a-bi}{a^2+b^2}","Reciprocal"],
+  ]},
 };
 
-async function loadData() {
-    const res = await fetch("https://whois65.github.io/JSON/math.json");
-    rawData = await res.json();
+/* ══════════ STATE ══════════ */
+let bookmarks = new Set(JSON.parse(localStorage.getItem('mr2_bm')||'[]'));
+let learned   = new Set(JSON.parse(localStorage.getItem('mr2_lrn')||'[]'));
+let qStats = JSON.parse(localStorage.getItem('mr2_qs')||'{"total":0,"correct":0,"streak":0,"best":0}');
 
-    cards = Object.entries(rawData).flatMap(([category, items]) =>
-        items.map(([formula, desc]) => ({
-            formula,
-            desc,
-            category
-        }))
-    );
+let viewMode = 'list';
+let currentCat = 'all';
+let modalKey = '';
+let currentView = 'library';
 
-    document.getElementById('totalCards').textContent = cards.length;
-    nextCard();
+// quiz
+let quizPool = [];
+let quizIdx  = 0;
+let quizMode = 'identify';
+let quizCatFilter = 'all';
+let quizAnswered = false;
+
+// flash
+let flashPool = [];
+let flashIdx  = 0;
+let flashFlipped = false;
+let flashCatFilter = 'all';
+let flashShuffle_ = false;
+let flashUnlearnedOnly = false;
+
+/* ══════════ HELPERS ══════════ */
+function key(cat,i){return cat+'::'+i}
+function save(){
+  localStorage.setItem('mr2_bm',JSON.stringify([...bookmarks]));
+  localStorage.setItem('mr2_lrn',JSON.stringify([...learned]));
+  localStorage.setItem('mr2_qs',JSON.stringify(qStats));
+}
+function toast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove('show'),2000);
+}
+function typeset(el){if(window.MathJax&&MathJax.typesetPromise)MathJax.typesetPromise([el]);}
+function allFormulas(){
+  let r=[];
+  for(const cat in DATA) DATA[cat].formulas.forEach((f,i)=>r.push({latex:f[0],desc:f[1],cat,key:key(cat,i),idx:i}));
+  return r;
+}
+function totalCount(){let t=0;for(const c in DATA)t+=DATA[c].formulas.length;return t;}
+
+/* ══════════ THEME ══════════ */
+function toggleTheme(){
+  const html=document.documentElement;
+  html.dataset.theme=html.dataset.theme==='dark'?'light':'dark';
 }
 
-function saveStats() {
-    localStorage.setItem("mathStats", JSON.stringify(stats));
+/* ══════════ VIEW SWITCH ══════════ */
+function switchView(v){
+  currentView=v;
+  ['library','quiz','flash'].forEach(id=>{
+    document.getElementById('view-'+id).style.display=id===v?'':'none';
+    document.getElementById('tab-'+id).classList.toggle('active',id===v);
+  });
+  if(v==='quiz') initQuiz();
+  if(v==='flash') initFlash();
 }
 
-function renderMath() {
-    MathJax.typesetClear();
-    MathJax.typesetPromise([document.getElementById('card')]);
-}
+/* ══════════ LIBRARY BUILD ══════════ */
+function buildLibrary(){
+  const container=document.getElementById('lib-content');
+  const sbCats=document.getElementById('sb-cats');
+  container.innerHTML=''; sbCats.innerHTML='';
+  let total=totalCount();
+  document.getElementById('badge-all').textContent=total;
+  document.getElementById('results-label').textContent='Showing '+total+' formulas';
 
-function updateStats() {
-    document.getElementById('score').textContent = stats.correct;
+  for(const cat in DATA){
+    const {icon,ic,formulas}=DATA[cat];
+    const link=document.createElement('a');
+    link.className='sb-link'+(currentCat===cat?' active':'');
+    link.dataset.cat=cat;
+    link.innerHTML=cat+' <span class="sb-badge">'+formulas.length+'</span>';
+    link.onclick=()=>filterCat(cat,link);
+    sbCats.appendChild(link);
 
-    const accuracy = stats.total > 0
-        ? Math.round((stats.correct / stats.total) * 100)
-        : 0;
+    const section=document.createElement('div');
+    section.className='cat-section'; section.id='cat-'+cat;
+    if(currentCat!=='all'&&currentCat!==cat) section.style.display='none';
 
-    document.getElementById('accuracy').textContent = accuracy + '%';
+    const header=document.createElement('div');
+    header.className='sec-header';
+    header.innerHTML='<div class="sec-title-row"><div class="sec-icon '+ic+'">'+icon+'</div><div><div class="sec-name">'+cat+'</div><div class="sec-count">'+formulas.length+' formulas</div></div></div><span class="sec-arrow">▼</span>';
+    header.onclick=()=>{header.classList.toggle('collapsed');wrap.style.display=header.classList.contains('collapsed')?'none':''};
 
-    const progress = stats.total > 0
-        ? (stats.total / cards.length) * 100
-        : 0;
+    const wrap=document.createElement('div');
+    wrap.className='cards-grid'+(viewMode==='grid'?' gv':'');
 
-    document.getElementById('progressFill').style.width = progress + '%';
-
-    saveStats();
-}
-
-function getRandomIndex() {
-    if (usedIndexes.length >= cards.length) usedIndexes = [];
-
-    let index;
-    do {
-        index = Math.floor(Math.random() * cards.length);
-    } while (usedIndexes.includes(index));
-
-    usedIndexes.push(index);
-    return index;
-}
-
-function showCard() {
-    const card = document.getElementById('card');
-    const quizDiv = document.getElementById('quizOptions');
-    quizDiv.innerHTML = '';
-
-    const currentCard = cards[current];
-
-    if (mode === 'flash') {
-        card.innerHTML = flipped
-            ? `<div><strong>${currentCard.desc}</strong><br><small>${currentCard.category}</small></div>`
-            : `\\(${currentCard.formula}\\)<div style="margin-top:10px;opacity:0.7;">${currentCard.category}</div>`;
-
-        card.classList.toggle('flipped', flipped);
-    } else {
-        card.innerHTML = `\\(${currentCard.formula}\\)<br><small style="opacity:0.7;">${currentCard.category}</small>`;
-        generateOptions();
-    }
-
-    renderMath();
-}
-
-function flipCard() {
-    if (mode !== 'flash') return;
-    flipped = !flipped;
-    showCard();
-}
-
-function nextCard() {
-    current = getRandomIndex();
-    flipped = false;
-    showCard();
-    updateStats();
-}
-
-function previousCard() {
-    current = (current - 1 + cards.length) % cards.length;
-    flipped = false;
-    showCard();
-}
-
-function setMode(m) {
-    mode = m;
-    document.querySelectorAll('.mode-btn, .quiz-btn')
-        .forEach(btn => btn.classList.remove('active'));
-
-    document.getElementById(m + 'Btn').classList.add('active');
-
-    flipped = false;
-    nextCard();
-}
-
-function generateOptions() {
-    const quizDiv = document.getElementById('quizOptions');
-    const currentCard = cards[current];
-
-    let options = [currentCard.desc];
-
-    while (options.length < 4) {
-        const rand = cards[Math.floor(Math.random() * cards.length)].desc;
-        if (!options.includes(rand)) options.push(rand);
-    }
-
-    options.sort(() => Math.random() - 0.5);
-
-    options.forEach(opt => {
-        const btn = document.createElement('button');
-        btn.className = 'option';
-        btn.dataset.answer = opt;
-        btn.textContent = opt;
-
-        btn.onclick = () => checkAnswer(btn, opt);
-
-        quizDiv.appendChild(btn);
+    formulas.forEach((f,i)=>{
+      const k=key(cat,i);
+      const card=document.createElement('div');
+      card.className='fcard'+(learned.has(k)?' learned':'');
+      card.innerHTML='<div class="fcard-left"><div class="fcard-formula">\\('+f[0]+'\\)</div><div class="fcard-desc">'+f[1]+'</div></div>'
+        +'<div class="fcard-actions">'
+        +'<button class="act bm'+(bookmarks.has(k)?' on':'')+'" title="Bookmark" onclick="event.stopPropagation();toggleBm(\''+k+'\',this)">🔖</button>'
+        +'<button class="act lrn'+(learned.has(k)?' on':'')+'" title="Learned" onclick="event.stopPropagation();toggleLrn(\''+k+'\',this)">✓</button>'
+        +'<button class="act" title="Copy LaTeX" onclick="event.stopPropagation();copyLatex(\''+f[0].replace(/\\/g,'\\\\').replace(/'/g,"\\'")+'\')">📋</button>'
+        +'</div>';
+      card.addEventListener('click',()=>openModal(k,f[0],f[1],cat));
+      wrap.appendChild(card);
     });
+
+    section.appendChild(header);
+    section.appendChild(wrap);
+    container.appendChild(section);
+  }
+  typeset(container);
+  updateProgress(); updateFavDot();
 }
 
-function checkAnswer(btn, opt) {
-    const currentCard = cards[current];
-    stats.total++;
-
-    const cat = currentCard.category;
-    if (!stats.categories[cat]) {
-        stats.categories[cat] = { total: 0, correct: 0 };
-    }
-
-    stats.categories[cat].total++;
-
-    document.querySelectorAll('.option')
-        .forEach(b => b.style.pointerEvents = 'none');
-
-    if (opt === currentCard.desc) {
-        stats.correct++;
-        stats.categories[cat].correct++;
-        stats.streak++;
-        stats.bestStreak = Math.max(stats.bestStreak, stats.streak);
-
-        btn.classList.add('correct');
-    } else {
-        stats.wrong++;
-        stats.streak = 0;
-
-        btn.classList.add('wrong');
-
-        // highlight correct
-        document.querySelectorAll('.option').forEach(b => {
-            if (b.dataset.answer === currentCard.desc) {
-                b.classList.add('correct');
-            }
-        });
-    }
-
-    updateStats();
-    setTimeout(nextCard, 1500);
+function filterCat(cat,el){
+  currentCat=cat;
+  document.querySelectorAll('.sb-link,.pill').forEach(e=>e.classList.remove('active'));
+  document.querySelectorAll('.sb-link[data-cat="'+cat+'"]').forEach(e=>e.classList.add('active'));
+  if(el) el.classList.add('active');
+  const total=cat==='all'?totalCount():DATA[cat]?.formulas.length||0;
+  document.getElementById('results-label').textContent='Showing '+total+' formulas';
+  document.querySelectorAll('.cat-section').forEach(s=>{
+    s.style.display=(cat==='all'||s.id==='cat-'+cat)?'':'none';
+  });
 }
 
-function resetStats() {
-    stats = {
-        total: 0,
-        correct: 0,
-        wrong: 0,
-        streak: 0,
-        bestStreak: 0,
-        categories: {}
-    };
-    saveStats();
-    updateStats();
+function onSearch(){
+  const q=document.getElementById('search-input').value.toLowerCase().trim();
+  let count=0;
+  document.querySelectorAll('.fcard').forEach(card=>{
+    const show=!q||card.textContent.toLowerCase().includes(q);
+    card.style.display=show?'':'none';
+    if(show) count++;
+  });
+  if(q){
+    document.querySelectorAll('.cat-section').forEach(s=>s.style.display='');
+    document.querySelectorAll('.sec-header').forEach(h=>{h.classList.remove('collapsed');if(h.nextElementSibling)h.nextElementSibling.style.display='';});
+    document.getElementById('results-label').textContent=count+' result'+(count!==1?'s':'');
+  } else {
+    filterCat(currentCat,null);
+  }
 }
 
-function showResults() {
-    const modal = document.getElementById('resultsModal');
-    const content = document.getElementById('resultsContent');
-
-    const accuracy = stats.total > 0
-        ? Math.round((stats.correct / stats.total) * 100)
-        : 0;
-
-    content.innerHTML = `
-        <div style="font-size:2em;margin:20px 0;">
-            ${stats.correct}/${stats.total} (${accuracy}%)
-        </div>
-        <div>🔥 Streak: ${stats.streak} | 🏆 Best: ${stats.bestStreak}</div>
-        <div style="text-align:left;margin-top:20px;">
-            ${Object.entries(stats.categories).map(([cat, d]) =>
-                `<div>${cat}: ${d.correct}/${d.total}</div>`
-            ).join('')}
-        </div>
-    `;
-
-    modal.style.display = 'block';
+function setView(v){
+  viewMode=v;
+  document.getElementById('v-list').classList.toggle('active',v==='list');
+  document.getElementById('v-grid').classList.toggle('active',v==='grid');
+  document.querySelectorAll('.cards-grid').forEach(w=>w.classList.toggle('gv',v==='grid'));
 }
 
-function closeResults() {
-    document.getElementById('resultsModal').style.display = 'none';
+/* ══════════ BOOKMARK / LEARN ══════════ */
+function toggleBm(k,btn){
+  if(bookmarks.has(k)){bookmarks.delete(k);btn&&btn.classList.remove('on');toast('Bookmark removed');}
+  else{bookmarks.add(k);btn&&btn.classList.add('on');toast('🔖 Bookmarked!');}
+  save(); updateFavDot(); renderBmPanel();
+}
+function toggleLrn(k,btn){
+  const card=btn?btn.closest('.fcard'):null;
+  if(learned.has(k)){learned.delete(k);btn&&btn.classList.remove('on');card&&card.classList.remove('learned');toast('Unmarked');}
+  else{learned.add(k);btn&&btn.classList.add('on');card&&card.classList.add('learned');toast('✓ Learned!');}
+  save(); updateProgress(); updateFlashStats();
+}
+function updateFavDot(){
+  const d=document.getElementById('fav-dot');
+  d.textContent=bookmarks.size; d.classList.toggle('on',bookmarks.size>0);
+}
+function updateProgress(){
+  const total=totalCount();
+  const pct=total?Math.round(learned.size/total*100):0;
+  document.getElementById('prog-fill').style.width=pct+'%';
+  document.getElementById('prog-text').textContent=learned.size+' / '+total;
+  document.getElementById('prog-pct').textContent=pct+'%';
+}
+function copyLatex(latex){navigator.clipboard.writeText(latex).then(()=>toast('LaTeX copied!')).catch(()=>toast('Copy failed'));}
+
+/* ══════════ MODAL ══════════ */
+function openModal(k,latex,desc,cat){
+  modalKey=k;
+  document.getElementById('modal-title').textContent=desc;
+  document.getElementById('modal-formula').innerHTML='\\('+latex+'\\)';
+  document.getElementById('modal-latex').textContent=latex;
+  document.getElementById('modal-meta').innerHTML='<div class="minfo"><div class="minfo-k">Category</div><div class="minfo-v">'+cat+'</div></div><div class="minfo"><div class="minfo-k">Description</div><div class="minfo-v">'+desc+'</div></div>';
+  document.getElementById('modal-bm-btn').textContent=bookmarks.has(k)?'★ Bookmarked':'🔖 Bookmark';
+  document.getElementById('modal-lrn-btn').textContent=learned.has(k)?'✓ Learned':'✓ Mark learned';
+  document.getElementById('modal-bg').classList.add('open');
+  typeset(document.getElementById('modal-formula'));
+}
+function closeModal(e){if(e.target===document.getElementById('modal-bg'))closeModalDirect();}
+function closeModalDirect(){document.getElementById('modal-bg').classList.remove('open');}
+function copyModalLatex(){copyLatex(document.getElementById('modal-latex').textContent);}
+function toggleBmFromModal(){
+  const k=modalKey;
+  if(bookmarks.has(k)){bookmarks.delete(k);document.getElementById('modal-bm-btn').textContent='🔖 Bookmark';}
+  else{bookmarks.add(k);document.getElementById('modal-bm-btn').textContent='★ Bookmarked';}
+  save(); updateFavDot(); renderBmPanel();
+}
+function toggleLrnFromModal(){
+  const k=modalKey;
+  if(learned.has(k)){learned.delete(k);document.getElementById('modal-lrn-btn').textContent='✓ Mark learned';}
+  else{learned.add(k);document.getElementById('modal-lrn-btn').textContent='✓ Learned';}
+  save(); updateProgress(); updateFlashStats();
 }
 
-// init
-updateStats();
-loadData();
+/* ══════════ BOOKMARK PANEL ══════════ */
+function toggleBmPanel(){document.getElementById('bm-panel').classList.toggle('open');renderBmPanel();}
+function renderBmPanel(){
+  const body=document.getElementById('bm-body');
+  if(!bookmarks.size){body.innerHTML='<div class="bm-empty">No saved formulas yet.<br>Click 🔖 on any formula to save it.</div>';return;}
+  let html='';
+  for(const cat in DATA) DATA[cat].formulas.forEach((f,i)=>{
+    const k=key(cat,i);
+    if(!bookmarks.has(k))return;
+    html+='<div class="bm-item" onclick="openModal(\''+k+'\',\''+f[0].replace(/\\/g,'\\\\').replace(/'/g,"\\'")+'\',\''+f[1].replace(/'/g,"\\'")+'\',\''+cat+'\')">'
+      +'<div class="bm-item-formula">\\('+f[0]+'\\)</div>'
+      +'<div class="bm-item-meta">'+f[1]+' — '+cat+'</div></div>';
+  });
+  body.innerHTML=html; typeset(body);
+}
 
-document.getElementById('resultsModal').onclick = (e) => {
-    if (e.target.classList.contains('modal')) closeResults();
-};
+/* ══════════ QUIZ ══════════ */
+function buildQuizFilterChips(){
+  const area=document.getElementById('quiz-filter-chips');
+  area.innerHTML='';
+  const all=document.createElement('button');
+  all.className='chip'+(quizCatFilter==='all'?' active':'');
+  all.textContent='All'; all.onclick=()=>{quizCatFilter='all';buildQuizFilterChips();buildQuizPool();quizIdx=0;renderQuiz();};
+  area.appendChild(all);
+  for(const cat in DATA){
+    const c=document.createElement('button');
+    c.className='chip'+(quizCatFilter===cat?' active':'');
+    c.textContent=cat; c.onclick=()=>{quizCatFilter=cat;buildQuizFilterChips();buildQuizPool();quizIdx=0;renderQuiz();};
+    area.appendChild(c);
+  }
+}
+function buildQuizPool(){
+  quizPool=[];
+  for(const cat in DATA){
+    if(quizCatFilter!=='all'&&quizCatFilter!==cat) continue;
+    DATA[cat].formulas.forEach((f,i)=>quizPool.push({latex:f[0],desc:f[1],cat,key:key(cat,i)}));
+  }
+  quizPool.sort(()=>Math.random()-0.5);
+}
+function initQuiz(){buildQuizFilterChips();buildQuizPool();quizIdx=0;renderQuiz();updateQuizStats();}
+function setQuizMode(m,btn){
+  quizMode=m;
+  document.querySelectorAll('.qtog').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderQuiz();
+}
+function renderQuiz(){
+  if(!quizPool.length) return;
+  const q=quizPool[quizIdx%quizPool.length];
+  quizAnswered=false;
+  document.getElementById('quiz-cat').textContent=q.cat;
+  document.getElementById('quiz-formula').innerHTML='\\('+q.latex+'\\)';
+  document.getElementById('quiz-hint').style.display='none';
+  document.getElementById('quiz-reveal-btn').textContent='Reveal answer';
+  document.getElementById('quiz-result-overlay').classList.remove('show');
+
+  const mcArea=document.getElementById('quiz-mc-area');
+  const btnsArea=document.getElementById('quiz-btns');
+
+  if(quizMode==='multiple'){
+    mcArea.style.display='grid'; btnsArea.style.display='none';
+    mcArea.innerHTML='';
+    let opts=[q.desc];
+    const pool=quizPool.filter(x=>x.desc!==q.desc);
+    while(opts.length<4&&pool.length){const r=pool.splice(Math.floor(Math.random()*pool.length),1)[0];opts.push(r.desc);}
+    opts.sort(()=>Math.random()-0.5);
+    opts.forEach(opt=>{
+      const btn=document.createElement('button');
+      btn.className='mc-opt'; btn.textContent=opt;
+      btn.onclick=()=>checkMcAnswer(btn,opt,q.desc);
+      mcArea.appendChild(btn);
+    });
+  } else {
+    mcArea.style.display='none'; btnsArea.style.display='flex';
+  }
+  typeset(document.getElementById('quiz-card'));
+}
+function quizReveal(){
+  if(!quizPool.length) return;
+  const q=quizPool[quizIdx%quizPool.length];
+  const hint=document.getElementById('quiz-hint');
+  hint.textContent='→ '+q.desc;
+  hint.style.display='block';
+  document.getElementById('quiz-reveal-btn').textContent='Got it ✓';
+}
+function quizNext(){quizIdx++;renderQuiz();}
+function checkMcAnswer(btn,opt,correct){
+  if(quizAnswered) return; quizAnswered=true;
+  document.querySelectorAll('.mc-opt').forEach(b=>b.style.pointerEvents='none');
+  if(opt===correct){
+    btn.classList.add('correct');
+    qStats.correct++; qStats.streak++; qStats.best=Math.max(qStats.best,qStats.streak);
+    if(qStats.streak>=3){document.getElementById('streak-text').textContent=qStats.streak+' in a row!';document.getElementById('streak-banner').classList.add('show');}
+    showQuizResult(true,'Correct!','');
+  } else {
+    btn.classList.add('wrong');
+    qStats.streak=0; document.getElementById('streak-banner').classList.remove('show');
+    document.querySelectorAll('.mc-opt').forEach(b=>{if(b.textContent===correct)b.classList.add('correct');});
+    showQuizResult(false,'Not quite','The answer is: '+correct);
+  }
+  qStats.total++; save(); updateQuizStats();
+  setTimeout(()=>{document.getElementById('quiz-result-overlay').classList.remove('show');quizNext();},1800);
+}
+function showQuizResult(ok,msg,sub){
+  const ov=document.getElementById('quiz-result-overlay');
+  document.getElementById('qres-icon').textContent=ok?'✅':'❌';
+  document.getElementById('qres-msg').textContent=msg;
+  document.getElementById('qres-desc').textContent=sub;
+  ov.classList.add('show');
+}
+function updateQuizStats(){
+  document.getElementById('qs-score').textContent=qStats.correct;
+  document.getElementById('qs-correct').textContent=qStats.correct;
+  document.getElementById('qs-acc').textContent=qStats.total?Math.round(qStats.correct/qStats.total*100)+'%':'—';
+  document.getElementById('qs-streak').textContent=qStats.best;
+}
+function resetQuizStats(){qStats={total:0,correct:0,streak:0,best:0};save();updateQuizStats();toast('Stats reset');document.getElementById('streak-banner').classList.remove('show');}
+
+/* ══════════ FLASHCARDS ══════════ */
+function buildFlashFilterChips(){
+  const area=document.getElementById('flash-filter-chips');
+  area.innerHTML='';
+  const all=document.createElement('button');
+  all.className='chip'+(flashCatFilter==='all'?' active':'');
+  all.textContent='All'; all.onclick=()=>{flashCatFilter='all';buildFlashFilterChips();buildFlashPool();flashIdx=0;renderFlash();};
+  area.appendChild(all);
+  for(const cat in DATA){
+    const c=document.createElement('button');
+    c.className='chip'+(flashCatFilter===cat?' active':'');
+    c.textContent=cat; c.onclick=()=>{flashCatFilter=cat;buildFlashFilterChips();buildFlashPool();flashIdx=0;renderFlash();};
+    area.appendChild(c);
+  }
+}
+function buildFlashPool(){
+  flashPool=[];
+  for(const cat in DATA){
+    if(flashCatFilter!=='all'&&flashCatFilter!==cat) continue;
+    DATA[cat].formulas.forEach((f,i)=>{
+      const k=key(cat,i);
+      if(flashUnlearnedOnly&&learned.has(k)) return;
+      flashPool.push({latex:f[0],desc:f[1],cat,key:k});
+    });
+  }
+  if(flashShuffle_) flashPool.sort(()=>Math.random()-0.5);
+}
+function initFlash(){buildFlashFilterChips();buildFlashPool();flashIdx=0;flashFlipped=false;renderFlash();updateFlashStats();}
+function renderFlash(){
+  if(!flashPool.length){
+    document.getElementById('fc-formula').innerHTML='No cards available';
+    document.getElementById('fc-desc').textContent='Adjust your filters';
+    document.getElementById('fc-cat-front').textContent='';
+    document.getElementById('fc-cat-back').textContent='';
+    document.getElementById('fc-counter').textContent='';
+    return;
+  }
+  const card=flashPool[flashIdx%flashPool.length];
+  document.getElementById('fc-formula').innerHTML='\\('+card.latex+'\\)';
+  document.getElementById('fc-desc').textContent=card.desc;
+  document.getElementById('fc-cat-front').textContent=card.cat;
+  document.getElementById('fc-cat-back').textContent=card.cat;
+  document.getElementById('fc-counter').textContent='Card '+(flashIdx%flashPool.length+1)+' of '+flashPool.length;
+  const markBtn=document.getElementById('flash-mark-btn');
+  markBtn.textContent=learned.has(card.key)?'Unmark learned':'Mark learned';
+  document.getElementById('fc-inner').classList.remove('flipped');
+  flashFlipped=false;
+  typeset(document.getElementById('fc-front'));
+}
+function flipCard(){
+  flashFlipped=!flashFlipped;
+  document.getElementById('fc-inner').classList.toggle('flipped',flashFlipped);
+  if(flashFlipped) typeset(document.getElementById('fc-back'));
+}
+function flashNext(){flashIdx=(flashIdx+1)%Math.max(flashPool.length,1);flashFlipped=false;document.getElementById('fc-inner').classList.remove('flipped');setTimeout(renderFlash,50);}
+function flashPrev(){flashIdx=(flashIdx-1+flashPool.length)%Math.max(flashPool.length,1);flashFlipped=false;document.getElementById('fc-inner').classList.remove('flipped');setTimeout(renderFlash,50);}
+function flashMark(){
+  if(!flashPool.length) return;
+  const card=flashPool[flashIdx%flashPool.length];
+  const k=card.key;
+  if(learned.has(k)){learned.delete(k);toast('Unmarked');}
+  else{learned.add(k);toast('✓ Learned!');}
+  save(); updateProgress(); updateFlashStats(); renderFlash();
+}
+function flashShuffle(){flashShuffle_=document.getElementById('flash-shuffle').checked;buildFlashPool();flashIdx=0;renderFlash();}
+function flashFilterUnlearned(){flashUnlearnedOnly=document.getElementById('flash-unlearned').checked;buildFlashPool();flashIdx=0;renderFlash();updateFlashStats();}
+function updateFlashStats(){
+  const total=totalCount();
+  const pct=total?Math.round(learned.size/total*100):0;
+  document.getElementById('fs-total').textContent=flashPool.length||totalCount();
+  document.getElementById('fs-learned').textContent=learned.size;
+  document.getElementById('fs-pct').textContent=pct+'%';
+}
+
+/* ══════════ INIT ══════════ */
+buildLibrary();
+switchView('library');
 </script>
 </body>
-  </html>
+</html>
