@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learn</title>
+    <style>
+        :root {
+            --accent: #135ce2;
+            --accent-hover: #0b2ebd;
+            --text: #fff;
+            --bg: #111;
+        }
+
+        .light {
+            --bg: #f5f5f5;
+            --text: #111;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: sans-serif;
+            font-weight: 600;
+        }
+
+        body {
+            background: var(--bg);
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            padding: 30px 15px;
+        }
+
+        header h1 {
+            font-size: 2rem;
+        }
+
+        header p {
+            opacity: .8;
+        }
+
+        .search-box {
+            padding: 0 15px 20px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 15px;
+            font-size: 16px;
+        }
+
+
+        #filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 0 15px 20px;
+        }
+
+        .filter-btn {
+            padding: 8px 14px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+
+        #group {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 15px;
+        }
+
+        .card {
+            backdrop-filter: blur(10px);
+            background: linear-gradient(135deg, #135ce2, #1a86ff);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, .25);
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            gap: 10px;
+            border-radius: 20px;
+            animation: fade .5s ease;
+        }
+
+        .card:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+        }
+
+        .card button {
+            background: whitesmoke;
+            border: 1px solid #0dd;
+            padding: 3px 0;
+            border-radius: 10px;
+        }
+
+        .title {
+            font-size: 18px;
+            color: var(--text);
+        }
+
+        .tags {
+            display: flex;
+            gap: 3px;
+        }
+
+        .tag {
+            background: white;
+            border-radius: 10px;
+            padding: 3px;
+        }
+
+        /* Animations */
+        @keyframes fade {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>📚 Learn Hub</h1>
+        <p>Find summaries and learning resources</p>
+    </header>
+    <button id="themeBtn">🌙</button>
+    <div class="search-box">
+        <input type="text" id="search" placeholder="Search topics...">
+    </div>
+    <div id="filters"></div>
+    <div class="stats">
+        <div>Total: <span id="total"></span></div>
+    </div>
+    <section>
+        <div id="group"></div>
+    </section>
+    <script>
+        const $ = id => document.getElementById(id);
+        const groupSection = document.getElementById("group");
+        const fragment = document.createDocumentFragment();
+        const data = [
+            ["Disgestion", ["Biology"], "https://www.instagram.com/rangkumanmateri_/p/DY6LjMMHeEy/"],
+            ["Algebra", ["Math"], "https://www.instagram.com/rangkumanmateri_/p/DY4mHhSlAOS/"],
+            ["Basic Comparison", ["Math"], "https://www.instagram.com/rangkumanmateri_/p/DYvnqVrGTBl/"],
+            ["Percentage & Decimal", ["Math"], "https://www.instagram.com/rangkumanmateri_/p/DYrkk9IlIMs/"],
+            ["Exam Preparation", ["Learn"], "https://www.instagram.com/rangkumanmateri_/p/DYntLYnknN4/"],
+            ["Numbers", ["Math"], "https://www.instagram.com/rangkumanmateri_/p/DYYi8A1GcRA/"],
+            ["Basic Calculations", ["Math"], "https://www.instagram.com/rangkumanmateri_/p/DYgeRdfgNs3/"],
+            ["Geometry", ["Math"], "https://www.instagram.com/rangkumanmateri_/p/DYUXPxdlHA3/"],
+            ["Two-dimentional figure", ["Math"], "https://www.instagram.com/rangkumanmateri_/p/DYMn-MtFENj/"],
+            ["Evolution", ["Biology"], "https://www.instagram.com/rangkumanmateri_/p/DYFAEDTlC0x/"],
+            ["Exam Preparation 1", ["Tips", "Learn"], "https://www.instagram.com/rangkumanmateri_/p/DXgzIBqlGOx/"],
+            ["Coordination System, Reproduction And Homeostasis", ["Biology"], "https://www.instagram.com/rangkumanmateri_/p/DXkrc6YEjIg/"],
+            ["Virus", ["Biology"], "https://www.instagram.com/rangkumanmateri_/p/DX3LDFklDvL/"],
+            ["Best Time For Learning", ["Tips", "Learn"], "https://www.instagram.com/rangkumanmateri_/p/DX3uHN4FNkb/"],
+            ["Nerve System", ["Biology"], "https://www.instagram.com/rangkumanmateri_/p/DX5PuLVkjeQ/"],
+            ["Algebra 1", ["Math"], "https://www.instagram.com/rangkumanmateri_/p/DX6sy7UFNRz/"],
+            ["Biographic Text", ["Indonesian"], "https://www.instagram.com/rangkumanmateri_/p/DX9P6qIFFsM/"],
+            ["Scientific Methods", ["Physics"], "https://www.instagram.com/rangkumanmateri_/p/DX-iTeJktjd/"],
+            ["Plants", ["Biology"], "https://www.instagram.com/rangkumanmateri_/p/DYBJASKmTSU/"],
+            ["PPU UTBK", ["Learn", "Exam"], "https://www.instagram.com/rangkumanmateri_/p/DXGCeIekl2e/"],
+            ["SNBT", ["Learn", "Tips"], "https://www.instagram.com/rangkumanmateri_/p/DWId2psFMDL/"],
+            ["Funtional Text & Expressions", ["English"], "https://www.instagram.com/rangkumanmateri_/p/DW-ddZMEwY8/"],
+            ["PU Basic Logics", ["Learn", "Exam"], "https://www.instagram.com/rangkumanmateri_/p/DW-JTkEk-Vi/"],
+            ["PU Basic Logics", ["Learn", "Exam"], "https://www.instagram.com/rangkumanmateri_/p/DW8wgXwlOjH/"],
+            ["Choosing a Major", ["Learn", "College"], "https://www.instagram.com/rangkumanmateri_/p/DWxnHjBEltC/"],
+            ["Important Forms", ["Chemistry"], "https://www.instagram.com/rangkumanmateri_/p/DWjGIKzFAJE/"],
+            ["Important Forms 1", ["Math"], "https://www.instagram.com/rangkumanmateri_/p/DWLCrYdEuOb/"],
+            ["Important Forms 2", ["Math"], "https://www.instagram.com/rangkumanmateri_/p/DV5Dg_SgOon/"],
+            ["Important Forms 3", ["Math"], "https://www.instagram.com/rangkumanmateri_/p/DWG7DNNlNqH/"],
+            ["Important Forms 2", ["Physics"], "https://www.instagram.com/rangkumanmateri_/p/DWPvBhcE9K1/"],
+            ["Important Forms 1", ["Physics"], "https://www.instagram.com/rangkumanmateri_/p/DWNndKwkkA5/"],
+            ["Fight Laziness", ["Tips"], "https://www.instagram.com/rangkumanmateri_/p/DVpMsw0Eolu/"],
+            ["Literation", ["English"], "https://www.instagram.com/rangkumanmateri_/p/DVbDWcLkpQm/"],
+            ["Arithmetic Sequence", ["Math"], "https://www.instagram.com/rangkumanmateri_/p/DVPvp48kqls/"],
+            ["Algebra Function Limit", ["Math"], "https://www.instagram.com/rangkumanmateri_/p/DVCkC2eEopG/"],
+            ["Probability", ["Math"], "https://www.instagram.com/rangkumanmateri_/p/DVBbnoKkvdH/"],
+            ["Social Interactions", ["Sociology"], "https://www.instagram.com/rangkumanmateri_/p/DU1-Y_kEr5F/"],
+            ["Present Perfect Tense", ["English"], "https://www.instagram.com/rangkumanmateri_/p/DUwk5hZEilB/"],
+            ["Pressure", ["Physics"], "https://www.instagram.com/rangkumanmateri_/p/DUnjlMPkndW/"],
+            ["Inequality", ["Math"], "https://www.instagram.com/rangkumanmateri_/p/DUcOah2Elrk/"],
+            ["Ecology", ["Biology"], "https://www.instagram.com/rangkumanmateri_/p/DUU1IoGEovc/"],
+            ["Harmonic Vibrations", ["Physics"], "https://www.instagram.com/rangkumanmateri_/p/DUXGIGMkpZw/"],
+            ["Mechanic Wave", ["Physics"], "https://www.instagram.com/rangkumanmateri_/p/DUVZrd7ktft/"],
+            ["Number Theorem", ["Math"], "https://www.instagram.com/rangkumanmateri_/p/DUNwlApEnV0/"],
+            ["Mathematics Logics", ["Math", "Exam"], "https://www.instagram.com/rangkumanmateri_/p/DUNM6-WgAGh/"],
+            ["Ejaan", ["Indonesian", "Exam"], "https://www.instagram.com/rangkumanmateri_/p/DUMf-FcEmQk/"],
+            ["Preposition", ["Indonesian", "Exam"], "https://www.instagram.com/rangkumanmateri_/p/DUCY15kEvOZ/"],
+            ["Electrolyte Liquid", ["Chemistry"], "https://www.instagram.com/rangkumanmateri_/p/DT96rE3gPG6/"],
+            ["Learning Tips", ["Tips"], "https://www.instagram.com/rangkumanmateri_/p/DTPxyrIktgW/"],
+            ["Logarithm", ["Math"], "https://www.instagram.com/rangkumanmateri_/p/DSZ3oVkkhS3/"]
+        ]
+        // create cards
+        data.forEach(i => {
+            const container = document.createElement("div");
+            let tags = "";
+            i[1].forEach(j => tags += `<div class="tag">${j}</div>`)
+            container.classList = "card";
+            container.onclick = () => window.location.href = `${i[2]}`;
+            container.dataset.tags = i[1].join(",");
+            container.innerHTML = `<div class="title">${i[0]}</div><div class="tags">${tags}</div><button>Learn More</button>`;
+            groupSection.appendChild(container);
+        });
+        // Stats
+        $("total").textContent = data.length + " Learning Materials";
+        // Count lessons
+        const counts = {};
+
+        data.forEach(item => {
+            item[1].forEach(tag => {
+                counts[tag] = (counts[tag] || 0) + 1;
+            });
+        });
+        let info = "";
+        Object.keys(counts).forEach(i => {
+            info += i + ": " + counts[i] + "\n"
+        });
+        $("total").onclick = () => alert(info)
+
+        // Dark Button
+        themeBtn.onclick = () => document.body.classList.toggle("light");
+        // Search Bar
+        const search = document.getElementById("search");
+
+        search.addEventListener("input", () => {
+            const keyword = search.value.toLowerCase();
+
+            document.querySelectorAll(".card").forEach(card => {
+                card.style.display =
+                    card.innerText.toLowerCase().includes(keyword)
+                        ? "flex"
+                        : "none";
+            });
+        });
+        // Filters
+        const subjects = [...new Set(data.flatMap(x => x[1]))];
+
+        subjects.forEach(subject => {
+            const btn = document.createElement("button");
+
+            btn.className = "filter-btn";
+            btn.textContent = subject;
+
+            btn.onclick = () => {
+                document.querySelectorAll(".card").forEach(card => {
+                    card.style.display =
+                        card.dataset.tags.includes(subject)
+                            ? "flex"
+                            : "none";
+                });
+            };
+
+            filters.appendChild(btn);
+        });
+
+    </script>
+</body>
+
+</html>
