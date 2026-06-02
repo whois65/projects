@@ -1,6 +1,5 @@
 <!doctype html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -16,7 +15,6 @@
             --accent: #3b82f6;
             --border: rgba(255, 255, 255, 0.08);
         }
-
         .light {
             --bg: #f8fafc;
             --surface: rgba(255, 255, 255, 0.8);
@@ -25,7 +23,6 @@
             --text-secondary: #52525b;
             --border: rgba(0, 0, 0, 0.08);
         }
-
         * {
             margin: 0;
             padding: 0;
@@ -33,14 +30,12 @@
             font-family: sans-serif;
             font-weight: 600;
         }
-
         body {
             background: var(--bg);
             color: var(--text);
             min-height: 100vh;
             overflow-x: hidden;
         }
-
         body::before {
             content: "";
             position: fixed;
@@ -54,7 +49,6 @@
                     transparent 40%);
             z-index: -1;
         }
-
         #themeBtn {
             position: fixed;
             bottom: 20px;
@@ -69,12 +63,10 @@
             cursor: pointer;
             z-index: 999;
         }
-
         header {
             text-align: center;
             padding: 60px 20px 40px;
         }
-
         header h1 {
             font-size: 3rem;
             font-weight: 800;
@@ -82,18 +74,15 @@
             -webkit-background-clip: text;
             color: transparent;
         }
-
         header p {
             margin-top: 10px;
             color: var(--text-secondary);
         }
-
         .search-box {
             max-width: 700px;
             margin: auto;
             padding: 20px;
         }
-
         .search-box input {
             width: 100%;
             padding: 16px 20px;
@@ -104,13 +93,11 @@
             backdrop-filter: blur(15px);
             font-size: 15px;
         }
-
         .search-box input:focus {
             outline: none;
             border-color: #3b82f6;
             box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
         }
-
         section,
         .stats,
         .search-box,
@@ -118,14 +105,12 @@
             max-width: 1400px;
             margin: auto;
         }
-
         #filters {
             display: flex;
             flex-wrap: wrap;
             gap: 8px;
             padding: 0 15px 20px;
         }
-
         .filter-btn {
             border: none;
             background: var(--surface);
@@ -135,23 +120,19 @@
             cursor: pointer;
             transition: 0.25s;
         }
-
         .filter-btn:hover {
             background: #3b82f6;
             color: white;
         }
-
         .filter-btn.active {
             background: #3b82f6;
             color: white;
         }
-
         .stats {
             display: flex;
             justify-content: center;
             padding: 20px;
         }
-
         .stat-card {
             padding: 20px 30px;
             border-radius: 20px;
@@ -159,14 +140,12 @@
             backdrop-filter: blur(15px);
             border: 1px solid var(--border);
         }
-
         #group {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             gap: 20px;
             padding: 15px;
         }
-
         .card {
             background: var(--surface);
             backdrop-filter: blur(20px);
@@ -181,20 +160,17 @@
             gap: 10px;
             animation: fade 0.5s ease;
         }
-
         .card:hover {
             transform: translateY(-8px);
             background: var(--surface-hover);
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
         }
-
         .card img {
             width: 100%;
             height: 180px;
             object-fit: cover;
             border-radius: 16px;
         }
-
         .card button {
             margin-top: auto;
             border: none;
@@ -204,21 +180,17 @@
             border-radius: 14px;
             cursor: pointer;
         }
-
         .card button:hover {
             transform: scale(1.02);
         }
-
         .title {
             font-size: 18px;
             color: var(--text);
         }
-
         .tags {
             display: flex;
             gap: 3px;
         }
-
         .tag {
             background: rgba(59, 130, 246, 0.15);
             color: #60a5fa;
@@ -226,14 +198,12 @@
             border-radius: 999px;
             font-size: 12px;
         }
-
         /* Animations */
         @keyframes fade {
             from {
                 opacity: 0;
                 transform: translateY(20px);
             }
-
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -241,7 +211,6 @@
         }
     </style>
 </head>
-
 <body>
     <header>
         <h1>
@@ -326,34 +295,60 @@
         ];
         // create cards
         async function getimg(url) {
-            const cache = await caches.open("thumbnails");
-            let response = await cache.match(url);
-            if (!response) {
-                response = await fetch(url);
-                cache.put(url, response.clone());
-            }
-            const blob = await response.blob();
-            return URL.createObjectURL(blob);
+    const cache = await caches.open("thumbnails");
+    let response = await cache.match(url);
+    if (!response) {
+        response = await fetch(url);
+        if (response.ok) {
+            cache.put(url, response.clone());
         }
-        async function createCards() {
-            for (const i of data) {
-                const container = document.createElement("div");
-                const imgurl = await getimg(
-                    `https://image.thum.io/get/${i[2]}`
-                );
-                let tags = "";
-                i[1].forEach(j => {
-                    tags += `<div class="tag">${j}</div>`;
-                });
-                container.className = "card";
-                container.onclick = () => {
-                    window.location.href = i[2];
-                };
-                container.dataset.tags = i[1].join(",");
-                container.innerHTML = `<img loading="lazy" onload="URL.revokeObjectURL(img.src)" src="${imgurl}"><div class="title">${i[0]}</div><div class="tags">${tags}</div><button>Learn More</button>`;
-                groupSection.appendChild(container);
-            }
+    }
+    const blob = await response.blob();
+    return URL.createObjectURL(blob);
+}
+async function loadImages() {
+    data.forEach(async (item, index) => {
+        try {
+            const img = document.getElementById(`img-${index}`);
+            const url = await getimg(
+                `https://image.thum.io/get/${item[2]}`
+            );
+            img.src = url;
+            img.onload = () => {
+                URL.revokeObjectURL(url);
+            };
         }
+        catch (err) {
+            console.error(err);
+        }
+    });
+}
+        function createCards() {
+    const fragment = document.createDocumentFragment();
+    data.forEach((i, index) => {
+        const card = document.createElement("div");
+        let tags = "";
+        i[1].forEach(tag => {
+            tags += `<div class="tag">${tag}</div>`;
+        });
+        card.className = "card";
+        card.dataset.tags = i[1].join(",");
+        card.innerHTML = `
+            <img
+                id="img-${index}"
+                loading="lazy"
+                src="assets/placeholder.webp"
+            >
+            <div class="title">${i[0]}</div>
+            <div class="tags">${tags}</div>
+            <button>Learn More</button>
+        `;
+        card.onclick = () => location.href = i[2];
+        fragment.appendChild(card);
+    });
+    groupSection.appendChild(fragment);
+    loadImages();
+}
         createCards();
         // Stats
         $("total").textContent = data.length;
@@ -398,5 +393,4 @@
         });
     </script>
 </body>
-
 </html>
