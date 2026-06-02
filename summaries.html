@@ -11,10 +11,8 @@
             --bg: #09090b;
             --surface: rgba(255, 255, 255, 0.05);
             --surface-hover: rgba(255, 255, 255, 0.08);
-
             --text: #fafafa;
             --text-secondary: #a1a1aa;
-
             --accent: #3b82f6;
             --border: rgba(255, 255, 255, 0.08);
         }
@@ -23,10 +21,8 @@
             --bg: #f8fafc;
             --surface: rgba(255, 255, 255, 0.8);
             --surface-hover: rgba(255, 255, 255, 0.95);
-
             --text: #18181b;
             --text-secondary: #52525b;
-
             --border: rgba(0, 0, 0, 0.08);
         }
 
@@ -49,7 +45,6 @@
             content: "";
             position: fixed;
             inset: 0;
-
             background:
                 radial-gradient(circle at top left,
                     rgba(59, 130, 246, 0.25),
@@ -57,31 +52,21 @@
                 radial-gradient(circle at bottom right,
                     rgba(168, 85, 247, 0.18),
                     transparent 40%);
-
             z-index: -1;
         }
 
         #themeBtn {
             position: fixed;
-
             bottom: 20px;
             right: 20px;
-
             width: 55px;
             height: 55px;
-
             border: none;
-
             border-radius: 50%;
-
             background: var(--surface);
-
             backdrop-filter: blur(20px);
-
             color: var(--text);
-
             cursor: pointer;
-
             z-index: 999;
         }
 
@@ -93,9 +78,7 @@
         header h1 {
             font-size: 3rem;
             font-weight: 800;
-
             background: linear-gradient(90deg, #60a5fa, #a855f7);
-
             -webkit-background-clip: text;
             color: transparent;
         }
@@ -114,24 +97,17 @@
         .search-box input {
             width: 100%;
             padding: 16px 20px;
-
             border-radius: 18px;
             border: 1px solid var(--border);
-
             background: var(--surface);
-
             color: var(--text);
-
             backdrop-filter: blur(15px);
-
             font-size: 15px;
         }
 
         .search-box input:focus {
             outline: none;
-
             border-color: #3b82f6;
-
             box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
         }
 
@@ -178,13 +154,9 @@
 
         .stat-card {
             padding: 20px 30px;
-
             border-radius: 20px;
-
             background: var(--surface);
-
             backdrop-filter: blur(15px);
-
             border: 1px solid var(--border);
         }
 
@@ -212,32 +184,24 @@
 
         .card:hover {
             transform: translateY(-8px);
-
             background: var(--surface-hover);
-
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
         }
 
-        .card img{
-    width:100%;
-    height:180px;
-    object-fit:cover;
-    border-radius:16px;
-}
+        .card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 16px;
+        }
 
         .card button {
             margin-top: auto;
-
             border: none;
-
             background: linear-gradient(90deg, #3b82f6, #2563eb);
-
             color: white;
-
             padding: 12px;
-
             border-radius: 14px;
-
             cursor: pointer;
         }
 
@@ -257,13 +221,9 @@
 
         .tag {
             background: rgba(59, 130, 246, 0.15);
-
             color: #60a5fa;
-
             padding: 6px 12px;
-
             border-radius: 999px;
-
             font-size: 12px;
         }
 
@@ -365,21 +325,40 @@
             ["Logarithm", ["Math"], "https://www.instagram.com/rangkumanmateri_/p/DSZ3oVkkhS3/",],
         ];
         // create cards
-        data.forEach((i) => {
-            const container = document.createElement("div");
-            let tags = "";
-            i[1].forEach((j) => (tags += `<div class="tag">${j}</div>`));
-            container.classList = "card";
-            container.onclick = () => (window.location.href = `${i[2]}`);
-            container.dataset.tags = i[1].join(",");
-            container.innerHTML = `<img src="https://image.thum.io/get/${i[2]}"><div class="title">${i[0]}</div><div class="tags">${tags}</div><button>Learn More</button>`;
-            groupSection.appendChild(container);
-        });
+        async function getimg(url) {
+            const cache = await caches.open("thumbnails");
+            let response = await cache.match(url);
+            if (!response) {
+                response = await fetch(url);
+                cache.put(url, response.clone());
+            }
+            const blob = await response.blob();
+            return URL.createObjectURL(blob);
+        }
+        async function createCards() {
+            for (const i of data) {
+                const container = document.createElement("div");
+                const imgurl = await getimg(
+                    `https://image.thum.io/get/${i[2]}`
+                );
+                let tags = "";
+                i[1].forEach(j => {
+                    tags += `<div class="tag">${j}</div>`;
+                });
+                container.className = "card";
+                container.onclick = () => {
+                    window.location.href = i[2];
+                };
+                container.dataset.tags = i[1].join(",");
+                container.innerHTML = `<img loading="lazy" onload="URL.revokeObjectURL(img.src)" src="${imgurl}"><div class="title">${i[0]}</div><div class="tags">${tags}</div><button>Learn More</button>`;
+                groupSection.appendChild(container);
+            }
+        }
+        createCards();
         // Stats
         $("total").textContent = data.length;
         // Count lessons
         const counts = {};
-
         data.forEach((item) => {
             item[1].forEach((tag) => {
                 counts[tag] = (counts[tag] || 0) + 1;
@@ -390,15 +369,12 @@
             info += i + ": " + counts[i] + "\n";
         });
         $("total").onclick = () => alert(info);
-
         // Dark Button
         themeBtn.onclick = () => document.body.classList.toggle("light");
         // Search Bar
         const search = document.getElementById("search");
-
         search.addEventListener("input", () => {
             const keyword = search.value.toLowerCase();
-
             document.querySelectorAll(".card").forEach((card) => {
                 card.style.display = card.innerText.toLowerCase().includes(keyword)
                     ? "flex"
@@ -407,13 +383,10 @@
         });
         // Filters
         const subjects = [...new Set(data.flatMap((x) => x[1]))];
-
         subjects.forEach((subject) => {
             const btn = document.createElement("button");
-
             btn.className = "filter-btn";
             btn.textContent = subject;
-
             btn.onclick = () => {
                 document.querySelectorAll(".card").forEach((card) => {
                     card.style.display = card.dataset.tags.includes(subject)
@@ -421,7 +394,6 @@
                         : "none";
                 });
             };
-
             filters.appendChild(btn);
         });
     </script>
