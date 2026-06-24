@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Modern English Dictionary</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
   <style>
     :root {
       --primary: #0078ff;
@@ -29,6 +31,7 @@
       flex-direction: column;
       align-items: center;
       padding: 40px 20px;
+      overflow: hidden;
     }
 
     .container {
@@ -47,20 +50,30 @@
       display: flex;
       gap: 10px;
       margin-bottom: 24px;
+      background: #ffffff;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      transition: border-color 0.2s;
     }
 
     input {
       flex: 1;
       padding: 12px 16px;
       font-size: 16px;
-      border-radius: 8px;
-      border: 1px solid var(--border);
+      margin-left: 5px;
       outline: none;
-      transition: border-color 0.2s;
+      border: none;
     }
 
     input:focus {
       border-color: var(--primary);
+    }
+
+    .search-box i {
+      padding: 12px 24px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
     }
 
     button {
@@ -90,6 +103,13 @@
 
     .audio-btn:hover {
       background-color: #cce4ff;
+    }
+
+    .scroll-container {
+      width: 100%;
+      height: 80vh;
+      overflow-y: auto;
+      overflow-x: hidden;
     }
 
     #output {
@@ -195,19 +215,27 @@
     }
 
     @keyframes spin {
-      from { transform: rotate(0deg); }
-      to   { transform: rotate(360deg); }
+      from {
+        transform: rotate(0deg);
+      }
+
+      to {
+        transform: rotate(360deg);
+      }
     }
   </style>
 </head>
+
 <body>
+  <section id="history"></section>
 
   <div class="container">
     <h1>English Dictionary</h1>
-    
+
     <div class="search-box">
       <input type="text" id="wordInput" placeholder="Search for a word..." autocomplete="off">
-      <button id="searchBtn">Search</button>
+      <i class="ti ti-x"></i>
+      <i id="searchBtn" class="ti ti-search"></i>
     </div>
 
     <div id="loading">
@@ -215,14 +243,17 @@
       <p>Searching...</p>
     </div>
 
-    <div id="output"></div>
+    <div class="scroll-container">
+      <div id="output"></div>
+    </div>
   </div>
 
   <script>
-    const wordInput = document.querySelector('#wordInput');
-    const searchBtn = document.querySelector('#searchBtn');
-    const output = document.querySelector('#output');
-    const loading = document.querySelector('#loading');
+    const $ = x => document.getElementById(x), qs = x => document.querySelector(x);
+    const wordInput = qs('#wordInput');
+    const searchBtn = qs('#searchBtn');
+    const output = qs('#output');
+    const loading = qs('#loading');
 
     // Trigger search on click
     searchBtn.addEventListener('click', () => handleSearch());
@@ -233,6 +264,12 @@
         handleSearch();
       }
     });
+
+    let history = [];
+
+    history.forEach(i => {
+      $('history').innerHTML += `<p>${i}</p>`;
+    })
 
     function handleSearch() {
       const word = wordInput.value.trim();
@@ -249,21 +286,21 @@
         loading.style.display = "block";
 
         const response = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`);
-        
+
         if (!response.ok) {
           throw new Error('Word not found');
         }
 
         const data = await response.json();
         const entry = data[0];
-        
+
         loading.style.display = "none";
         output.style.display = "block";
 
         // 1. Build Header (Word, Phonetic, Audio)
         const headerDiv = document.createElement('div');
         headerDiv.className = 'word-header';
-        
+
         const titleContainer = document.createElement('div');
         const title = document.createElement('h2');
         title.className = 'word-title';
@@ -283,12 +320,12 @@
         if (audioObj) {
           const audio = document.createElement('audio');
           audio.src = audioObj.audio;
-          
+
           const audioBtn = document.createElement('button');
           audioBtn.className = 'audio-btn';
           audioBtn.textContent = '🔊 Play';
           audioBtn.onclick = () => audio.play();
-          
+
           headerDiv.appendChild(audio);
           headerDiv.appendChild(audioBtn);
         }
@@ -338,4 +375,5 @@
     }
   </script>
 </body>
+
 </html>
